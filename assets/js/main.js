@@ -28,19 +28,45 @@ class MiniGamesHubApp {
      * 初始化应用程序
      */
     async init() {
+        console.log('MiniGamesHubApp 初始化开始...');
+
         this.initializeElements();
         this.setupEventListeners();
         this.showLoadingScreen();
-        
+
         // 等待游戏数据加载
         if (window.gameDataManager) {
             if (window.gameDataManager.loaded) {
+                console.log('游戏数据已经加载完成');
                 this.onDataLoaded();
             } else {
-                window.gameDataManager.on('loaded', () => this.onDataLoaded());
-                window.gameDataManager.on('error', (error) => this.onDataLoadError(error));
+                console.log('等待游戏数据加载...');
+
+                // 设置超时机制
+                const timeout = setTimeout(() => {
+                    console.log('数据加载超时，强制使用默认数据...');
+                    if (window.gameDataManager && !window.gameDataManager.loaded) {
+                        console.log('强制触发默认数据加载...');
+                        if (typeof window.gameDataManager.useDefaultData === 'function') {
+                            window.gameDataManager.useDefaultData();
+                        }
+                    }
+                }, 8000); // 8秒超时
+
+                window.gameDataManager.on('loaded', () => {
+                    clearTimeout(timeout);
+                    console.log('游戏数据加载完成事件触发');
+                    this.onDataLoaded();
+                });
+
+                window.gameDataManager.on('error', (error) => {
+                    clearTimeout(timeout);
+                    console.log('游戏数据加载错误事件触发:', error);
+                    this.onDataLoadError(error);
+                });
             }
         } else {
+            console.log('gameDataManager 未准备好，重试...');
             setTimeout(() => this.init(), 100); // 如果 gameDataManager 未准备好则重试
         }
     }
@@ -137,22 +163,28 @@ class MiniGamesHubApp {
         
         // 游戏卡片点击事件（事件委托）
         document.addEventListener('click', (e) => {
-            if (e.target.closest('.game-card')) {
-                const gameCard = e.target.closest('.game-card');
+            const gameCard = e.target.closest('.game-card');
+            if (gameCard) {
+                console.log('Game card clicked:', gameCard);
                 const gameId = gameCard.dataset.gameId;
+                console.log('Game ID from dataset:', gameId);
                 if (gameId) {
                     this.openGameModal(parseInt(gameId));
+                } else {
+                    console.error('No game ID found on clicked card');
                 }
+                return;
             }
-            
+
             // 收藏按钮点击
-            if (e.target.closest('.favorite-btn')) {
+            const favoriteBtn = e.target.closest('.favorite-btn');
+            if (favoriteBtn) {
                 e.stopPropagation();
-                const favoriteBtn = e.target.closest('.favorite-btn');
                 const gameId = favoriteBtn.dataset.gameId;
                 if (gameId) {
                     this.toggleGameFavorite(parseInt(gameId));
                 }
+                return;
             }
         });
         
@@ -189,14 +221,19 @@ class MiniGamesHubApp {
      * 数据加载完成时的处理
      */
     onDataLoaded() {
-        this.hideLoadingScreen();
-        this.populateCategories();
-        this.populateFeaturedGames();
-        this.populateGames();
-        this.updateSiteStats();
-        this.updateFavoritesCount();
-        
-        console.log('MiniGamesHub 应用程序初始化完成');
+        // 安全地检查和调用方法
+        try {
+            this.hideLoadingScreen();
+            this.populateCategories();
+            this.populateFeaturedGames();
+            this.populateGames();
+            this.updateSiteStats();
+            this.updateFavoritesCount();
+
+            console.log('MiniGamesHub 应用程序初始化完成');
+        } catch (error) {
+            console.warn('onDataLoaded 执行出错（可能因为DOM元素不存在）:', error);
+        }
     }
     
     /**
@@ -255,15 +292,21 @@ class MiniGamesHubApp {
      * 填充分类数据
      */
     populateCategories() {
+        // 安全检查：确保elements已初始化
+        if (!this.elements) {
+            console.warn('Elements not initialized, skipping populateCategories');
+            return;
+        }
+
         const categories = window.gameDataManager.getAllCategories();
-        
+
         // 填充导航栏下拉菜单
         if (this.elements.categoriesDropdown && categories.length > 0) {
             this.elements.categoriesDropdown.innerHTML = categories.map(category => `
                 <li><a href="#" class="dropdown-link" data-category="${category.id}">${category.name}</a></li>
             `).join('');
         }
-        
+
         // 填充分类筛选按钮
         if (this.elements.categoriesFilter) {
             const categoryButtons = categories.map(category => `
@@ -271,20 +314,20 @@ class MiniGamesHubApp {
                     ${category.name} (${category.game_count || 0})
                 </button>
             `).join('');
-            
+
             this.elements.categoriesFilter.innerHTML = `
                 <button class="category-btn active" data-category="all">所有游戏</button>
                 ${categoryButtons}
             `;
         }
-        
+
         // 填充页脚分类链接
         if (this.elements.footerCategories) {
             this.elements.footerCategories.innerHTML = categories.map(category => `
                 <li><a href="#" data-category="${category.id}">${category.name}</a></li>
             `).join('');
         }
-        
+
         // 填充分类网格
         if (this.elements.categoriesGrid) {
             this.elements.categoriesGrid.innerHTML = categories.map(category => `
@@ -304,13 +347,17 @@ class MiniGamesHubApp {
      * 填充特色游戏
      */
     populateFeaturedGames() {
-        const featuredGames = window.gameDataManager.getFeaturedGames(8);
-        
-        if (this.elements.featuredGames) {
-            this.elements.featuredGames.innerHTML = featuredGames.map(game => 
-                this.createGameCard(game)
-            ).join('');
+        // 安全检查
+        if (!this.elements || !this.elements.featuredGames) {
+            console.warn('Featured games element not found, skipping populateFeaturedGames');
+            return;
         }
+
+        const featuredGames = window.gameDataManager.getFeaturedGames(8);
+
+        this.elements.featuredGames.innerHTML = featuredGames.map(game =>
+            this.createGameCard(game)
+        ).join('');
     }
     
     /**
@@ -390,6 +437,7 @@ class MiniGamesHubApp {
      * 格式化数字（如播放次数）
      */
     formatNumber(num) {
+        if (!num || isNaN(num)) return '0';
         if (num >= 1000000) {
             return (num / 1000000).toFixed(1) + 'M';
         } else if (num >= 1000) {
@@ -397,13 +445,136 @@ class MiniGamesHubApp {
         }
         return num.toString();
     }
-    
+
+    /**
+     * 显示错误消息（非弹窗）
+     */
+    showErrorMessage(message) {
+        console.error(message);
+
+        // 创建错误消息元素
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #f44336;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 10000;
+            max-width: 300px;
+            animation: slideIn 0.3s ease;
+        `;
+        errorDiv.textContent = message;
+
+        document.body.appendChild(errorDiv);
+
+        // 3秒后自动移除
+        setTimeout(() => {
+            errorDiv.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => {
+                if (errorDiv.parentNode) {
+                    document.body.removeChild(errorDiv);
+                }
+            }, 300);
+        }, 3000);
+    }
+
+    /**
+     * 显示加载指示器
+     */
+    showLoadingIndicator(iframe) {
+        const container = iframe.parentElement;
+
+        // 移除已存在的加载器
+        const existingLoader = container.querySelector('.game-loader');
+        if (existingLoader) {
+            container.removeChild(existingLoader);
+        }
+
+        // 创建加载指示器
+        const loader = document.createElement('div');
+        loader.className = 'game-loader';
+        loader.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            text-align: center;
+        `;
+        loader.innerHTML = `
+            <div style="
+                width: 60px;
+                height: 60px;
+                border: 4px solid #f3f3f3;
+                border-top: 4px solid #007AFF;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin: 0 auto 20px;
+            "></div>
+            <div style="color: white; font-size: 16px;">加载游戏中...</div>
+        `;
+
+        container.appendChild(loader);
+        iframe.style.opacity = '0.3';
+    }
+
+    /**
+     * 隐藏加载指示器
+     */
+    hideLoadingIndicator(iframe) {
+        const container = iframe.parentElement;
+        const loader = container.querySelector('.game-loader');
+        if (loader) {
+            container.removeChild(loader);
+        }
+        iframe.style.opacity = '1';
+    }
+
+    /**
+     * 生成星级评分
+     */
+    generateStars(rating) {
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 >= 0.5;
+        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+        let starsHTML = '';
+
+        // 满星
+        for (let i = 0; i < fullStars; i++) {
+            starsHTML += '<span style="color: #FFD700;">★</span>';
+        }
+
+        // 半星
+        if (hasHalfStar) {
+            starsHTML += '<span style="color: #FFD700;">☆</span>';
+        }
+
+        // 空星
+        for (let i = 0; i < emptyStars; i++) {
+            starsHTML += '<span style="color: #ccc;">☆</span>';
+        }
+
+        return starsHTML + ` <span style="color: #666; font-size: 0.9em;">(${rating.toFixed(1)})</span>`;
+    }
+
     /**
      * 加载更多游戏
      */
     loadMoreGames() {
+        // 安全检查
+        if (!this.elements || !this.elements.gamesGrid) {
+            console.warn('Games grid element not found, skipping loadMoreGames');
+            return;
+        }
+
         let games;
-        
+
         if (this.searchQuery) {
             games = window.gameDataManager.searchGames(this.searchQuery, {
                 category: this.currentCategory === 'all' ? null : this.currentCategory,
@@ -417,18 +588,18 @@ class MiniGamesHubApp {
                 .filter(game => game.category === parseInt(this.currentCategory))
                 .slice(this.loadedGames, this.loadedGames + this.gamesPerPage);
         }
-        
+
         if (games.length > 0) {
             const gameCards = games.map(game => this.createGameCard(game)).join('');
-            
+
             if (this.loadedGames === 0) {
                 this.elements.gamesGrid.innerHTML = gameCards;
             } else {
                 this.elements.gamesGrid.insertAdjacentHTML('beforeend', gameCards);
             }
-            
+
             this.loadedGames += games.length;
-            
+
             // 更新加载更多按钮状态
             if (this.elements.loadMoreBtn) {
                 const hasMoreGames = this.getTotalAvailableGames() > this.loadedGames;
@@ -488,16 +659,22 @@ class MiniGamesHubApp {
      * 更新网站统计信息
      */
     updateSiteStats() {
+        // 安全检查
+        if (!this.elements) {
+            console.warn('Elements not initialized, skipping updateSiteStats');
+            return;
+        }
+
         const stats = window.gameDataManager.getStats();
-        
+
         if (this.elements.totalGames) {
             this.animateNumber(this.elements.totalGames, stats.totalGames);
         }
-        
+
         if (this.elements.totalCategories) {
             this.animateNumber(this.elements.totalCategories, stats.totalCategories);
         }
-        
+
         if (this.elements.totalPlays) {
             this.animateNumber(this.elements.totalPlays, stats.totalPlays);
         }
@@ -707,30 +884,135 @@ class MiniGamesHubApp {
      * 更新收藏数量显示
      */
     updateFavoritesCount() {
-        if (this.elements.favoritesCount && window.gameManager) {
-            const count = window.gameManager.getFavorites().length;
-            this.elements.favoritesCount.textContent = count;
-            this.elements.favoritesCount.style.display = count > 0 ? 'block' : 'none';
+        // 安全检查
+        if (!this.elements || !this.elements.favoritesCount || !window.gameManager) {
+            console.warn('Elements or gameManager not available, skipping updateFavoritesCount');
+            return;
         }
+
+        const count = window.gameManager.getFavorites().length;
+        this.elements.favoritesCount.textContent = count;
+        this.elements.favoritesCount.style.display = count > 0 ? 'block' : 'none';
     }
     
     /**
      * 打开游戏模态框
      */
     openGameModal(gameId) {
+        console.log('Opening game modal for ID:', gameId);
+
+        if (!window.gameDataManager) {
+            console.error('gameDataManager not found');
+            this.showErrorMessage('游戏系统未初始化，请刷新页面重试...');
+            return;
+        }
+
+        if (!window.gameDataManager.loaded) {
+            console.error('Game data not loaded yet');
+            this.showErrorMessage('游戏数据正在加载，请稍后再试...');
+            return;
+        }
+
         const game = window.gameDataManager.getGameById(gameId);
-        if (!game) return;
-        
-        if (this.elements.gameModal && this.elements.modalGameTitle && this.elements.gameIframe) {
-            this.elements.modalGameTitle.textContent = game.name;
-            this.elements.gameIframe.src = game.file;
-            this.elements.gameModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            
-            // 更新游戏播放统计
-            if (window.gameManager) {
-                window.gameManager.recordPlay(gameId);
-            }
+        if (!game) {
+            console.error('Game not found:', gameId);
+            this.showErrorMessage('未找到该游戏，请刷新页面重试...');
+            return;
+        }
+
+        console.log('Game found:', game.name, 'URL:', game.file);
+
+        // 重新获取元素，以防初始化时未找到
+        const gameModal = document.getElementById('game-modal');
+        const modalGameTitle = document.getElementById('modal-game-title');
+        const gameIframe = document.getElementById('game-iframe');
+        const modalDescription = document.getElementById('modal-description');
+        const modalInstructions = document.getElementById('modal-instructions');
+        const modalPlays = document.getElementById('modal-plays');
+        const modalRating = document.getElementById('modal-rating');
+
+        if (!gameModal) {
+            console.error('Game modal element not found');
+            this.showErrorMessage('游戏界面加载失败，请刷新页面重试...');
+            return;
+        }
+
+        if (!gameIframe) {
+            console.error('Game iframe element not found');
+            this.showErrorMessage('游戏容器加载失败，请刷新页面重试...');
+            return;
+        }
+
+        // 设置游戏信息
+        if (modalGameTitle) {
+            modalGameTitle.textContent = game.name || game.game_name || 'Untitled Game';
+        }
+
+        // 设置游戏描述
+        if (modalDescription) {
+            modalDescription.textContent = game.description || game.game_description || '一款有趣的在线游戏，快来体验吧！';
+        }
+
+        // 设置游戏操作说明
+        if (modalInstructions) {
+            modalInstructions.textContent = game.instructions || game.game_instructions || '使用鼠标或键盘控制游戏。具体操作请参考游戏内的说明。';
+        }
+
+        // 设置游戏统计信息
+        if (modalPlays) {
+            const plays = game.plays || game.play_count || 0;
+            modalPlays.textContent = `${this.formatNumber(plays)} plays`;
+        }
+
+        // 设置评分
+        if (modalRating) {
+            const rating = game.rating || game.game_rating || 4.0;
+            modalRating.innerHTML = this.generateStars(rating);
+        }
+
+        if (!game.file || game.file.trim() === '') {
+            console.error('Game has no URL');
+            this.showErrorMessage('抱歉，该游戏暂时无法使用');
+            return;
+        }
+
+        // 显示加载指示器
+        this.showLoadingIndicator(gameIframe);
+
+        // 设置游戏 URL
+        gameIframe.src = game.file;
+
+        // 设置加载超时
+        const loadTimeout = setTimeout(() => {
+            console.error('Game loading timeout');
+            this.hideLoadingIndicator(gameIframe);
+            this.showErrorMessage('游戏加载超时，请检查网络连接后重试');
+            gameIframe.src = '';
+        }, 30000); // 30秒超时
+
+        gameIframe.onload = () => {
+            clearTimeout(loadTimeout);
+            this.hideLoadingIndicator(gameIframe);
+            console.log('Game iframe loaded successfully');
+        };
+
+        gameIframe.onerror = () => {
+            clearTimeout(loadTimeout);
+            console.error('Game iframe failed to load');
+            this.hideLoadingIndicator(gameIframe);
+            this.showErrorMessage('游戏加载失败，该游戏可能暂时不可用');
+            setTimeout(() => this.closeGameModal(), 3000);
+        };
+
+        // 显示模态框
+        gameModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+
+        console.log('✅ 游戏模态框打开成功');
+
+        // 更新游戏播放统计
+        if (window.gameManager) {
+            window.gameManager.recordGamePlay(gameId);
         }
     }
     
@@ -738,11 +1020,19 @@ class MiniGamesHubApp {
      * 关闭游戏模态框
      */
     closeGameModal() {
-        if (this.elements.gameModal && this.elements.gameIframe) {
-            this.elements.gameModal.style.display = 'none';
-            this.elements.gameIframe.src = '';
-            document.body.style.overflow = '';
+        const gameModal = document.getElementById('game-modal');
+        const gameIframe = document.getElementById('game-iframe');
+
+        if (gameModal) {
+            gameModal.classList.remove('active');
         }
+
+        if (gameIframe) {
+            gameIframe.src = '';
+        }
+
+        document.body.style.overflow = '';
+        console.log('Game modal closed');
     }
     
     /**
@@ -761,6 +1051,50 @@ class MiniGamesHubApp {
 
 // 创建全局应用实例
 window.miniGamesHubApp = new MiniGamesHubApp();
+// 为了兼容性，同时设置为 window.app
+window.app = window.miniGamesHubApp;
+
+// 添加全局游戏卡片点击处理器作为备用方案
+window.handleGameCardClick = function(event) {
+    console.log('全局点击处理器被调用:', event.target);
+
+    const gameCard = event.target.closest('.game-card');
+    if (gameCard) {
+        console.log('找到游戏卡片:', gameCard);
+        const gameId = gameCard.dataset.gameId;
+        console.log('游戏ID:', gameId);
+
+        if (gameId) {
+            console.log('尝试打开游戏模态框...');
+
+            // 尝试使用 miniGamesHubApp 实例
+            if (window.miniGamesHubApp && typeof window.miniGamesHubApp.openGameModal === 'function') {
+                try {
+                    window.miniGamesHubApp.openGameModal(parseInt(gameId));
+                    console.log('✅ 游戏模态框打开成功');
+                } catch (error) {
+                    console.error('❌ openGameModal 调用失败:', error);
+                }
+            } else {
+                console.error('❌ miniGamesHubApp 或 openGameModal 不存在');
+            }
+        } else {
+            console.error('❌ 游戏卡片没有 game-id');
+        }
+
+        // 阻止事件冒泡
+        event.stopPropagation();
+        return false;
+    }
+};
+
+// 添加额外的事件监听器确保点击能被捕获
+document.addEventListener('click', window.handleGameCardClick, true); // 使用捕获阶段
+
+// 添加调试信息
+console.log('MiniGamesHub App initialized:', window.miniGamesHubApp);
+console.log('Waiting for game data to load...');
+console.log('Global game card click handler added');
 
 // 导出模块（如果在模块环境中）
 if (typeof module !== 'undefined' && module.exports) {

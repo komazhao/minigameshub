@@ -272,7 +272,9 @@ function validateConfig() {
     
     // 验证网站 URL
     if (!SITE_CONFIG.siteUrl || SITE_CONFIG.siteUrl === 'https://minigameshub.co') {
-        console.warn('Using default site URL. Please update SITE_URL environment variable in production.');
+        if (typeof window === 'undefined' && typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'production') {
+            console.warn('Using default site URL. Please update SITE_URL environment variable in production.');
+        }
     }
     
     if (errors.length > 0) {

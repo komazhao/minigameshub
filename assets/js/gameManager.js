@@ -425,11 +425,18 @@ class GameManager {
      */
     getFavoriteGames() {
         if (!window.gameDataManager) return [];
-        
+
         return [...this.favorites]
             .map(gameId => window.gameDataManager.getGameById(gameId))
             .filter(Boolean)
             .sort((a, b) => (b.addedToFavorites || 0) - (a.addedToFavorites || 0));
+    }
+
+    /**
+     * Get favorite game IDs (for backward compatibility)
+     */
+    getFavorites() {
+        return Array.from(this.favorites);
     }
     
     /**
