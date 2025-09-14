@@ -1,0 +1,50 @@
+# 确保所有文件使用 UTF-8 编码
+* text=auto eol=lf
+
+# 文本文件强制 UTF-8 编码
+*.md text eol=lf encoding=UTF-8
+*.html text eol=lf encoding=UTF-8
+*.css text eol=lf encoding=UTF-8
+*.js text eol=lf encoding=UTF-8
+*.json text eol=lf encoding=UTF-8
+*.sql text eol=lf encoding=UTF-8
+*.txt text eol=lf encoding=UTF-8
+*.xml text eol=lf encoding=UTF-8
+
+# 配置文件
+*.yml text eol=lf encoding=UTF-8
+*.yaml text eol=lf encoding=UTF-8
+*.toml text eol=lf encoding=UTF-8
+*.ini text eol=lf encoding=UTF-8
+*.conf text eol=lf encoding=UTF-8
+
+# 特殊处理中文文档
+*-CN.md text eol=lf encoding=UTF-8
+*-cn.md text eol=lf encoding=UTF-8
+
+# 二进制文件
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.eot binary
+
+# 压缩文件
+*.zip binary
+*.tar binary
+*.gz binary
+*.rar binary
+*.7z binary
+
+# 其他二进制格式
+*.pdf binary
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary

@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "name": "Action",
+    "description": "Fast-paced action games",
+    "slug": "action",
+    "game_count": 0
+  },
+  {
+    "id": 2,
+    "name": "Adventure",
+    "description": "Exciting adventure games",
+    "slug": "adventure",
+    "game_count": 0
+  },
+  {
+    "id": 3,
+    "name": "Puzzle",
+    "description": "Brain-teasing puzzle games",
+    "slug": "puzzle",
+    "game_count": 0
+  },
+  {
+    "id": 4,
+    "name": "Sports",
+    "description": "Sports and athletic games",
+    "slug": "sports",
+    "game_count": 0
+  },
+  {
+    "id": 5,
+    "name": "Racing",
+    "description": "High-speed racing games",
+    "slug": "racing",
+    "game_count": 0
+  },
+  {
+    "id": 6,
+    "name": "Shooting",
+    "description": "Shooting and combat games",
+    "slug": "shooting",
+    "game_count": 0
+  },
+  {
+    "id": 7,
+    "name": "Arcade",
+    "description": "Classic arcade games",
+    "slug": "arcade",
+    "game_count": 0
+  },
+  {
+    "id": 8,
+    "name": "Strategy",
+    "description": "Strategic thinking games",
+    "slug": "strategy",
+    "game_count": 0
+  }
+]

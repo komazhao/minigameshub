@@ -1,0 +1,110 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Action",
+      "description": "Fast-paced action and adventure games",
+      "slug": "action",
+      "game_count": 250
+    },
+    {
+      "id": 2,
+      "name": "Racing",
+      "description": "High-speed racing and driving games",
+      "slug": "racing",
+      "game_count": 189
+    },
+    {
+      "id": 3,
+      "name": "Puzzle",
+      "description": "Brain-teasing puzzle and strategy games",
+      "slug": "puzzle",
+      "game_count": 320
+    },
+    {
+      "id": 4,
+      "name": "Sports",
+      "description": "Sports and athletic competition games",
+      "slug": "sports",
+      "game_count": 278
+    },
+    {
+      "id": 5,
+      "name": "Adventure",
+      "description": "Exploration and adventure games",
+      "slug": "adventure",
+      "game_count": 156
+    },
+    {
+      "id": 6,
+      "name": "Arcade",
+      "description": "Classic arcade and retro games",
+      "slug": "arcade",
+      "game_count": 440
+    },
+    {
+      "id": 7,
+      "name": "Shooting",
+      "description": "Shooting and combat games",
+      "slug": "shooting",
+      "game_count": 143
+    },
+    {
+      "id": 8,
+      "name": "Simulation",
+      "description": "Life simulation and management games",
+      "slug": "simulation",
+      "game_count": 98
+    }
+  ],
+  "games": [
+    {
+      "game_id": 1,
+      "catalog_id": "gamemonetize-32040",
+      "game_name": "starpoly",
+      "name": "Starpoly",
+      "image": "https://img.gamemonetize.com/stp68cw05n283o49a9n8qym64knqpbmz/512x384.jpg",
+      "category": 3,
+      "plays": 2,
+      "rating": 4.0,
+      "description": "Welcome to Starpoly, an exhilarating PC trading board game that ingeniously merges strategic gameplay with immersive elements.",
+      "instructions": "Mouse click to play",
+      "file": "https://html5.gamemonetize.com/stp68cw05n283o49a9n8qym64knqpbmz/",
+      "game_type": "html5",
+      "width": 800,
+      "height": 600,
+      "published": true,
+      "featured": false,
+      "mobile": true,
+      "keywords": "starpoly, board, game, strategy, trading",
+      "slug": "starpoly"
+    },
+    {
+      "game_id": 2,
+      "catalog_id": "gamemonetize-32039",
+      "game_name": "bus-school-park-driver",
+      "name": "Bus School Park Driver",
+      "image": "https://img.gamemonetize.com/i429yunzarak64517ysvdeki741nrdoc/512x384.jpg",
+      "category": 2,
+      "plays": 63,
+      "rating": 4.2,
+      "description": "Get ready to take control in Bus School Park Driver! This captivating simulation game places you in the driver's seat of a school bus.",
+      "instructions": "Mouse click or tap to play",
+      "file": "https://html5.gamemonetize.com/i429yunzarak64517ysvdeki741nrdoc/",
+      "game_type": "html5",
+      "width": 800,
+      "height": 600,
+      "published": true,
+      "featured": false,
+      "mobile": true,
+      "keywords": "bus, driving, parking, simulation, school",
+      "slug": "bus-school-park-driver"
+    }
+  ],
+  "stats": {
+    "totalGames": 2,
+    "totalCategories": 8,
+    "totalPlays": 65,
+    "lastUpdated": "2025-09-06T13:50:00.000Z"
+  }
+}

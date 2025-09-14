@@ -1,0 +1,65 @@
+# Robots.txt for MiniGamesHub.co
+# https://minigameshub.co/robots.txt
+
+User-agent: *
+Allow: /
+
+# Allow crawling of main content
+Allow: /games/
+Allow: /categories/
+Allow: /assets/css/
+Allow: /assets/js/
+Allow: /assets/images/
+Allow: /data/
+
+# Disallow admin and private areas (if any)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /temp/
+Disallow: /generated-pages/
+
+# Disallow search parameters to avoid duplicate content
+Disallow: /*?*
+Disallow: /*search*
+Disallow: /*filter*
+Disallow: /*sort*
+
+# Disallow API endpoints
+Disallow: /api/
+
+# Allow specific search engines to access important pages
+User-agent: Googlebot
+Allow: /games/
+Allow: /categories/
+Allow: /
+
+User-agent: Bingbot
+Allow: /games/
+Allow: /categories/
+Allow: /
+
+User-agent: Slurp
+Allow: /games/
+Allow: /categories/
+Allow: /
+
+# Block aggressive crawlers
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# Crawl delay for all bots
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://minigameshub.co/sitemap.xml
+Sitemap: https://minigameshub.co/sitemap-games.xml
+Sitemap: https://minigameshub.co/sitemap-categories.xml
+
+# Host directive
+Host: https://minigameshub.co

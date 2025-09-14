@@ -1,0 +1,71 @@
+# Cloudflare Pages Headers Configuration
+# 为 MiniGamesHub.co 优化的 HTTP 头配置
+
+/*
+  # 安全头部
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  
+  # 强制 HTTPS
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  
+  # Content Security Policy (游戏网站优化)
+  Content-Security-Policy: default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: blob: *.cloudflare.com *.supabase.co; style-src 'self' 'unsafe-inline' https: fonts.googleapis.com; font-src 'self' https: fonts.gstatic.com data:; img-src 'self' https: data: blob:; media-src 'self' https: blob:; frame-src 'self' https:; connect-src 'self' https: *.supabase.co *.cloudflare.com; worker-src 'self' blob:
+  
+  # 性能优化
+  Cross-Origin-Embedder-Policy: unsafe-none
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+
+# 静态资源缓存 (1年)
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+  
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+  
+*.css
+  Cache-Control: public, max-age=31536000, immutable
+  
+*.js
+  Cache-Control: public, max-age=31536000, immutable
+  
+*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+  
+*.png
+  Cache-Control: public, max-age=31536000, immutable
+  
+*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+  
+*.webp
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML 页面缓存 (1小时)
+/*.html
+  Cache-Control: public, max-age=3600
+
+# API 响应缓存 (5分钟)
+/api/*
+  Cache-Control: public, max-age=300
+
+# Service Worker (立即更新)
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Manifest 文件
+/manifest.json
+  Content-Type: application/manifest+json
+  Cache-Control: public, max-age=3600
+
+# XML 文件 (sitemap等)
+/*.xml
+  Content-Type: application/xml
+  Cache-Control: public, max-age=3600
+
+# 游戏文件特殊处理
+/games/*
+  X-Frame-Options: ALLOWALL
+  Content-Security-Policy: frame-ancestors *

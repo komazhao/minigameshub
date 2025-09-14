@@ -1,0 +1,58 @@
+# Cloudflare Pages Redirects Configuration
+# 为 MiniGamesHub.co 优化的重定向规则
+
+# 强制 HTTPS 重定向
+http://minigameshub.co/* https://minigameshub.co/:splat 301!
+http://www.minigameshub.co/* https://minigameshub.co/:splat 301!
+
+# WWW 重定向到非 WWW
+https://www.minigameshub.co/* https://minigameshub.co/:splat 301!
+
+# API 路由 (如果需要)
+/api/* /404.html 404
+
+# 游戏页面路由
+/game/:id /game.html 200
+/category/:slug /category.html 200
+
+# 特殊页面
+/featured /featured.html 200
+/new-games /new.html 200
+/popular /popular.html 200
+/random /random.html 200
+
+# 搜索页面
+/search /search.html 200
+/search/* /search.html 200
+
+# 用户相关页面 (可选功能)
+/favorites /favorites.html 200
+/profile /profile.html 200
+
+# 管理员页面 (如果需要)
+/admin /admin/index.html 200
+/admin/* /admin/index.html 200
+
+# SEO 友好的游戏 URL
+/play/:slug /game.html?slug=:slug 200
+
+# 分类别名
+/action /category.html?category=1 200
+/racing /category.html?category=2 200
+/puzzle /category.html?category=3 200
+/sports /category.html?category=4 200
+/adventure /category.html?category=5 200
+/arcade /category.html?category=6 200
+/shooting /category.html?category=7 200
+/simulation /category.html?category=8 200
+
+# 旧版本兼容性重定向 (如果从其他系统迁移)
+/games/* /game.html?id=:splat 301
+/categories/* /category.html?category=:splat 301
+
+# 错误页面
+/404 /404.html 200
+/500 /500.html 200
+
+# SPA 回退 - 所有未匹配的路由返回首页
+/* /index.html 200

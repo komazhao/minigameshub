@@ -1,0 +1,235 @@
+# ===========================
+# 环境和配置文件
+# ===========================
+
+# 环境变量（包含敏感信息）
+.env
+.env.local
+.env.production
+.env.development
+
+# Supabase 连接信息
+.supabase_connection
+
+# ===========================
+# 数据库相关文件
+# ===========================
+
+# SQL 数据文件（太大且包含数据）
+games.sql
+final_data.sql
+*-data.sql
+supabase_data_*.sql
+postgres_data.sql
+postgresql-data.sql
+
+# 数据库清理和迁移脚本（可选，根据需要）
+cleanup.sql
+*_schema.sql
+*_fixed.sql
+
+# Python 数据导入脚本（包含敏感逻辑）
+*_import.py
+*_fix.py
+import_*.py
+debug_*.py
+
+# ===========================
+# Python 虚拟环境
+# ===========================
+
+# Python 虚拟环境
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ===========================
+# 系统文件
+# ===========================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+.directory
+.Trash-*
+
+# ===========================
+# 编辑器和 IDE
+# ===========================
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*.swn
+*.swm
+*~
+
+# Claude
+.claude/
+
+# ===========================
+# 依赖和构建
+# ===========================
+
+# Node.js（如果后续添加）
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# 构建输出
+dist/
+build/
+*.min.js
+*.min.css
+
+# ===========================
+# 日志和临时文件
+# ===========================
+
+# 日志文件
+*.log
+logs/
+*.log.*
+
+# 临时文件
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+# ===========================
+# 测试相关
+# ===========================
+
+# 测试覆盖率
+coverage/
+*.lcov
+.nyc_output/
+
+# 测试数据
+test-data/
+*.test.sql
+
+# ===========================
+# 文档和报告
+# ===========================
+
+# 个人笔记和草稿
+notes/
+drafts/
+TODO.md
+NOTES.md
+
+# SQL 转换报告
+*-report.md
+*_report.md
+
+# ===========================
+# 敏感和私人文件
+# ===========================
+
+# API 密钥和证书
+*.key
+*.pem
+*.crt
+*.cer
+secrets/
+credentials/
+
+# 备份文件（可能包含敏感信息）
+*.backup
+backups/
+
+# ===========================
+# 大文件和媒体
+# ===========================
+
+# 大型媒体文件（根据需要调整）
+*.mp4
+*.avi
+*.mov
+*.zip
+*.rar
+*.tar.gz
+
+# ===========================
+# 项目特定忽略
+# ===========================
+
+# Python requirements（本地开发用）
+requirements.txt
+
+# 旧版本和备份
+*.backup
+SETUP.md.backup
+page-generator.js.backup
+
+# SQL 工作文件
+working_*.sql
+fixed_*.sql
+clean_*.sql
+
+# 临时解决方案文档
+FINAL_SOLUTION.md
+QUICK_START.md
+READY_TO_IMPORT.md
+
+# ===========================
+# 需要保留的文件（不忽略）
+# ===========================
+# !config.js              # 配置文件（已更新为使用环境变量）
+# !index.html            # 主页面
+# !manifest.json         # PWA 配置
+# !sw.js                 # Service Worker
+# !robots.txt           # SEO
+# !_headers             # Cloudflare 配置
+# !_redirects           # Cloudflare 重定向
+# !网站部署上线完整指导.md  # 部署文档
