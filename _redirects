@@ -13,13 +13,13 @@ https://www.minigameshub.co/* https://minigameshub.co/:splat 301!
 
 # 游戏页面路由
 /game/:id /game.html 200
-/category/:slug /category.html 200
+/category/:slug /collection.html?category=:slug 200
 
 # 特殊页面
-/featured /featured.html 200
-/new-games /new.html 200
-/popular /popular.html 200
-/random /random.html 200
+/featured /collection.html?collection=featured 200
+/new-games /collection.html?collection=new 200
+/popular /collection.html?collection=popular 200
+/random /index.html 200
 
 # 搜索页面
 /search /search.html 200
@@ -37,18 +37,18 @@ https://www.minigameshub.co/* https://minigameshub.co/:splat 301!
 /play/:slug /game.html?slug=:slug 200
 
 # 分类别名
-/action /category.html?category=1 200
-/racing /category.html?category=2 200
-/puzzle /category.html?category=3 200
-/sports /category.html?category=4 200
-/adventure /category.html?category=5 200
-/arcade /category.html?category=6 200
-/shooting /category.html?category=7 200
-/simulation /category.html?category=8 200
+/action /collection.html?category=action 200
+/racing /collection.html?category=racing 200
+/puzzle /collection.html?category=puzzle 200
+/sports /collection.html?category=sports 200
+/adventure /collection.html?category=adventure 200
+/arcade /collection.html?category=arcade 200
+/shooting /collection.html?category=shooting 200
+/simulation /collection.html?category=simulation 200
 
 # 旧版本兼容性重定向 (如果从其他系统迁移)
 /games/* /game.html?id=:splat 301
-/categories/* /category.html?category=:splat 301
+/categories/* /collection.html?category=:splat 301
 
 # 错误页面
 /404 /404.html 200

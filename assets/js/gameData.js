@@ -418,11 +418,15 @@ class GameDataManager {
         // Cache frequently accessed data
         this.cache.set('allGames', this.games);
         this.cache.set('allCategories', this.categories);
-        this.cache.set('featuredGames', this.games.filter(game => game.featured));
-        this.cache.set('popularGames', this.games.slice().sort((a, b) => b.plays - a.plays));
-        this.cache.set('newestGames', this.games.slice().sort((a, b) => b.date_added - a.date_added));
+        this.cache.set('featuredGames', this.buildFeaturedCollection());
+        this.cache.set('popularGames', this.games.slice().sort((a, b) => (b.plays || 0) - (a.plays || 0)));
+        this.cache.set('newestGames', this.games.slice().sort((a, b) => {
+            const dateA = new Date(a.date_added || a.created_at || 0).getTime();
+            const dateB = new Date(b.date_added || b.created_at || 0).getTime();
+            return dateB - dateA;
+        }));
     }
-    
+
     /**
      * Get all games
      */
@@ -440,11 +444,18 @@ class GameDataManager {
     /**
      * Get featured games
      */
-    getFeaturedGames(limit = null) {
-        const featured = this.cache.get('featuredGames') || this.games.filter(game => game.featured);
+    getFeaturedGames(limit = null, options = {}) {
+        const ensureMin = options.ensureMin || (limit || 4);
+        let featured = this.cache.get('featuredGames');
+
+        if (!featured || featured.length < ensureMin) {
+            featured = this.buildFeaturedCollection(ensureMin);
+            this.cache.set('featuredGames', featured);
+        }
+
         return limit ? featured.slice(0, limit) : featured;
     }
-    
+
     /**
      * Get popular games
      */
@@ -464,18 +475,88 @@ class GameDataManager {
     /**
      * Get games by category
      */
-    getGamesByCategory(categoryId) {
-        if (categoryId === 'all' || !categoryId) {
+    getGamesByCategory(category) {
+        if (category === 'all' || !category) {
             return this.getAllGames();
         }
-        
-        const cacheKey = `category_${categoryId}`;
-        if (!this.cache.has(cacheKey)) {
-            const games = this.games.filter(game => game.category === parseInt(categoryId));
-            this.cache.set(cacheKey, games);
+
+        let categoryId = parseInt(category, 10);
+        let categorySlug = null;
+
+        if (Number.isNaN(categoryId)) {
+            const categoryObj = this.getCategoryBySlug(category);
+            if (!categoryObj) {
+                return [];
+            }
+            categoryId = categoryObj.id;
+            categorySlug = categoryObj.slug;
+        } else {
+            const categoryObj = this.getCategoryById(categoryId);
+            categorySlug = categoryObj ? categoryObj.slug : null;
         }
-        
-        return this.cache.get(cacheKey) || [];
+
+        const cacheKeys = new Set([`category_${categoryId}`]);
+        if (categorySlug) {
+            cacheKeys.add(`category_${categorySlug}`);
+        }
+
+        let cachedGames = null;
+        for (const key of cacheKeys) {
+            if (this.cache.has(key)) {
+                cachedGames = this.cache.get(key);
+                break;
+            }
+        }
+
+        if (!cachedGames) {
+            const games = this.games.filter(game => game.category === parseInt(categoryId, 10));
+            cacheKeys.forEach(key => this.cache.set(key, games));
+            cachedGames = games;
+        }
+
+        return cachedGames || [];
+    }
+
+    /**
+     * Build featured games list with fallback when the dataset lacks enough flagged entries
+     */
+    buildFeaturedCollection(ensureMin = 4) {
+        const seen = new Set();
+        const addGame = (game, list) => {
+            if (!game || seen.has(game.game_id)) return;
+            seen.add(game.game_id);
+            list.push(game);
+        };
+
+        const featuredCandidates = this.games
+            .filter(game => game.featured)
+            .sort((a, b) => {
+                const ratingDiff = (b.rating || 0) - (a.rating || 0);
+                if (Math.abs(ratingDiff) > 0.01) return ratingDiff;
+                return (b.plays || 0) - (a.plays || 0);
+            });
+
+        const result = [];
+        featuredCandidates.forEach(game => addGame(game, result));
+
+        if (result.length < ensureMin) {
+            const fallbackCandidates = this.games
+                .slice()
+                .sort((a, b) => {
+                    const ratingDiff = (b.rating || 0) - (a.rating || 0);
+                    if (Math.abs(ratingDiff) > 0.01) return ratingDiff;
+                    return (b.plays || 0) - (a.plays || 0);
+                });
+
+            for (const game of fallbackCandidates) {
+                addGame(game, result);
+                if (result.length >= ensureMin + 12) {
+                    break;
+                }
+            }
+        }
+
+        return result;
     }
     
     /**

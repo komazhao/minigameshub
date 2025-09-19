@@ -184,30 +184,34 @@ async function handleStaticAsset(request) {
 async function handleGameRequest(request) {
     try {
         // Try network first for fresh content
-        const networkResponse = await fetch(request, {
-            timeout: 5000 // 5 second timeout
-        });
-        
-        if (networkResponse.ok) {
-            // Cache successful responses
-            const cache = await caches.open(GAME_CACHE_NAME);
-            cache.put(request, networkResponse.clone());
+        const networkResponse = await fetch(request);
+        const isOpaqueResponse = networkResponse.type === 'opaque';
+
+        if (networkResponse.ok || isOpaqueResponse) {
+            // Cache successful responses (opaque caching best-effort)
+            try {
+                const cache = await caches.open(GAME_CACHE_NAME);
+                await cache.put(request, networkResponse.clone());
+            } catch (cacheError) {
+                console.warn('[SW] Failed to cache game response:', cacheError);
+            }
+
             return networkResponse;
         }
-        
-        throw new Error('Network response not ok');
-        
+
+        throw new Error(`Network response not ok (status: ${networkResponse.status})`);
+
     } catch (error) {
-        console.log('[SW] Network failed, trying cache for:', request.url);
-        
+        console.log('[SW] Network failed, trying cache for:', request.url, error);
+
         // Fallback to cache
         const cachedResponse = await caches.match(request);
         if (cachedResponse) {
             return cachedResponse;
         }
-        
-        // Return error response
-        return new Response('Game temporarily unavailable', {
+
+        // Return graceful error response to iframe requests
+        return new Response('Game temporarily unavailable. Please try again later.', {
             status: 503,
             statusText: 'Service Unavailable',
             headers: { 'Content-Type': 'text/plain' }

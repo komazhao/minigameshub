@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="https://schema.org/CollectionPage">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniGamesHub Collections</title>
+    <meta name="description" content="Discover curated game collections on MiniGamesHub including featured, popular, newest and category-based picks.">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body data-page-context="collection">
+    <div id="loading-screen" class="loading-screen" aria-hidden="true">
+        <div class="loading-spinner"></div>
+        <p>Loading curated games...</p>
+    </div>
+
+    <header class="header">
+        <nav class="nav container">
+            <div class="nav-brand">
+                <a href="/" class="logo">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="40" height="40" rx="12" fill="url(#gradient)"/>
+                        <path d="M12 20L18 26L28 16" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40">
+                                <stop offset="0%" stop-color="#007AFF"/>
+                                <stop offset="100%" stop-color="#5856D6"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="logo-text">MiniGamesHub</span>
+                </a>
+            </div>
+
+            <div class="nav-menu" id="nav-menu">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle">Categories</a>
+                        <ul class="dropdown-menu" id="categories-dropdown">
+                            <!-- Populated dynamically -->
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/collection.html?collection=featured" class="nav-link">Featured</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/collection.html?collection=new" class="nav-link">New Games</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/collection.html?collection=popular" class="nav-link">Popular</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="nav-actions">
+                <button class="search-toggle" id="search-toggle" aria-label="Toggle search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="M21 21L16.65 16.65"></path>
+                    </svg>
+                </button>
+
+                <button class="favorites-toggle" id="favorites-toggle" aria-label="View favorites">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                    <span class="favorites-count" id="favorites-count">0</span>
+                </button>
+
+                <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+                    <span class="hamburger"></span>
+                    <span class="hamburger"></span>
+                    <span class="hamburger"></span>
+                </button>
+            </div>
+        </nav>
+
+        <div class="search-container" id="search-container">
+            <div class="search-box container">
+                <input type="text" id="search-input" placeholder="Search for games..." autocomplete="off">
+                <button class="search-btn" id="search-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="M21 21L16.65 16.65"></path>
+                    </svg>
+                </button>
+                <div class="search-suggestions" id="search-suggestions"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <section class="collection-hero section">
+            <div class="container">
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a href="/">Home</a>
+                    <span>›</span>
+                    <span id="collection-breadcrumb">Collections</span>
+                </nav>
+                <h1 class="collection-title" id="collection-title">Discover Games</h1>
+                <p class="collection-description" id="collection-description">
+                    Explore curated selections of HTML5 games tailored for every mood.
+                </p>
+                <div class="collection-meta">
+                    <span id="collection-count">共 0 款游戏</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="collection-controls section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title" id="collection-subtitle">Browse Collection</h2>
+                    <div class="section-controls">
+                        <select id="collection-sort" class="sort-select" aria-label="Sort games">
+                            <option value="default">默认排序</option>
+                            <option value="popular">最受欢迎</option>
+                            <option value="newest">最新上线</option>
+                            <option value="rating">最高评分</option>
+                            <option value="name">名称 A-Z</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="games-grid" id="collection-grid"></div>
+                <div class="empty-state" id="collection-empty" hidden>
+                    <div class="empty-icon">🎮</div>
+                    <h3>暂时没有符合条件的游戏</h3>
+                    <p>尝试更换分类或稍后再来看看。</p>
+                </div>
+                <div class="load-more-container">
+                    <button class="load-more-btn" id="collection-load-more">加载更多游戏</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <a href="/" class="footer-logo">
+                            <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="40" height="40" rx="12" fill="url(#footerGradient)"/>
+                                <path d="M12 20L18 26L28 16" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <defs>
+                                    <linearGradient id="footerGradient" x1="0" y1="0" x2="40" y2="40">
+                                        <stop offset="0%" stop-color="#007AFF"/>
+                                        <stop offset="100%" stop-color="#5856D6"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <span>MiniGamesHub</span>
+                        </a>
+                        <p class="footer-description">
+                            Your ultimate destination for free online mini games.
+                            Play thousands of games across all genres!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Game Categories</h3>
+                    <ul class="footer-links" id="footer-categories">
+                        <!-- Populated dynamically -->
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="/collection.html?collection=featured">Featured Games</a></li>
+                        <li><a href="/collection.html?collection=new">New Games</a></li>
+                        <li><a href="/collection.html?collection=popular">Popular Games</a></li>
+                        <li><a href="/random">Random Game</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3 class="footer-title">About</h3>
+                    <ul class="footer-links">
+                        <li><a href="/privacy-policy">Privacy Policy</a></li>
+                        <li><a href="/terms-of-service">Terms of Service</a></li>
+                        <li><a href="/contact">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 MiniGamesHub.co. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="game-modal" class="modal" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-game-title">Game Title</h2>
+                <div class="modal-actions">
+                    <button class="modal-favorite" id="modal-favorite" aria-label="Add to favorites">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                        </svg>
+                    </button>
+                    <button class="modal-fullscreen" id="modal-fullscreen" aria-label="Toggle fullscreen">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                        </svg>
+                    </button>
+                    <button class="modal-close" id="modal-close" aria-label="Close game">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="game-container">
+                    <iframe id="game-iframe" src="" frameborder="0" allowfullscreen
+                        allow="accelerometer; gyroscope; fullscreen; gamepad; microphone; camera; autoplay; encrypted-media; xr-spatial-tracking; picture-in-picture; web-share"
+                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-pointer-lock allow-orientation-lock allow-modals"></iframe>
+                </div>
+                <div class="game-info">
+                    <div class="game-meta">
+                        <div class="game-rating">
+                            <div class="stars" id="modal-rating"></div>
+                            <span class="plays" id="modal-plays">0 plays</span>
+                        </div>
+                        <div class="game-controls">
+                            <button class="control-btn" id="play-btn">Play</button>
+                            <button class="control-btn" id="pause-btn" style="display: none;">Pause</button>
+                        </div>
+                    </div>
+                    <div class="game-description">
+                        <p id="modal-description">Game description will appear here.</p>
+                    </div>
+                    <div class="game-instructions">
+                        <h4>How to Play:</h4>
+                        <p id="modal-instructions">Game instructions will appear here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/config.js"></script>
+    <script src="/assets/js/gameData.js"></script>
+    <script src="/assets/js/gameManager.js"></script>
+    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/collectionPage.js"></script>
+</body>
+</html>
