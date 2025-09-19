@@ -144,17 +144,17 @@
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle">Categories</a>
                         <ul class="dropdown-menu">
-                            <li><a href="/collection.html?category=action" class="nav-link">Action</a></li>
-                            <li><a href="/collection.html?category=racing" class="nav-link">Racing</a></li>
-                            <li><a href="/collection.html?category=puzzle" class="nav-link">Puzzle</a></li>
-                            <li><a href="/collection.html?category=sports" class="nav-link">Sports</a></li>
+                            <li><a href="/collections/category/action" class="nav-link" data-local-href="/collection.html?category=action">Action</a></li>
+                            <li><a href="/collections/category/racing" class="nav-link" data-local-href="/collection.html?category=racing">Racing</a></li>
+                            <li><a href="/collections/category/puzzle" class="nav-link" data-local-href="/collection.html?category=puzzle">Puzzle</a></li>
+                            <li><a href="/collections/category/sports" class="nav-link" data-local-href="/collection.html?category=sports">Sports</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a href="/collection.html?collection=featured" class="nav-link">Featured</a>
+                        <a href="/collections/featured" class="nav-link" data-local-href="/collection.html?collection=featured">Featured</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/collection.html?collection=popular" class="nav-link">Popular</a>
+                        <a href="/collections/popular" class="nav-link" data-local-href="/collection.html?collection=popular">Popular</a>
                     </li>
                 </ul>
             </div>
@@ -412,9 +412,9 @@
                 <div class="footer-section">
                     <h3 class="footer-title">Quick Links</h3>
                     <ul class="footer-links">
-                        <li><a href="/collection.html?collection=featured">Featured Games</a></li>
-                        <li><a href="/collection.html?collection=new">New Games</a></li>
-                        <li><a href="/collection.html?collection=popular">Popular Games</a></li>
+                        <li><a href="/collections/featured" data-local-href="/collection.html?collection=featured">Featured Games</a></li>
+                        <li><a href="/collections/new" data-local-href="/collection.html?collection=new">New Games</a></li>
+                        <li><a href="/collections/popular" data-local-href="/collection.html?collection=popular">Popular Games</a></li>
                         <li><a href="/random">Random Game</a></li>
                     </ul>
                 </div>
@@ -569,6 +569,7 @@
             });
     </script>
     
+    <script src="/assets/js/localFallback.js"></script>
     <script src="/assets/js/gameData.js"></script>
     <script src="/assets/js/gameManager.js"></script>
     

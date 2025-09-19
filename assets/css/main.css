@@ -633,6 +633,35 @@ body {
     margin-bottom: var(--spacing-md);
 }
 
+.faq-section {
+    background: var(--system-background-secondary);
+}
+
+.faq-list {
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+.faq-item {
+    background: var(--system-background);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--separator);
+}
+
+.faq-item h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+    color: var(--label-primary);
+}
+
+.faq-item p {
+    color: var(--label-secondary);
+    line-height: 1.7;
+}
+
 .game-card {
     background: var(--system-background);
     border-radius: var(--radius-xl);

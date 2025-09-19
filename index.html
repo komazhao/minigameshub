@@ -117,13 +117,13 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a href="/collection.html?collection=featured" class="nav-link">Featured</a>
+                        <a href="/collections/featured" class="nav-link" data-local-href="/collection.html?collection=featured">Featured</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/collection.html?collection=new" class="nav-link">New Games</a>
+                        <a href="/collections/new" class="nav-link" data-local-href="/collection.html?collection=new">New Games</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/collection.html?collection=popular" class="nav-link">Popular</a>
+                        <a href="/collections/popular" class="nav-link" data-local-href="/collection.html?collection=popular">Popular</a>
                     </li>
                 </ul>
             </div>
@@ -268,6 +268,27 @@
                 </div>
             </div>
         </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section section">
+            <div class="container">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <div class="faq-list">
+                    <article class="faq-item">
+                        <h3>MiniGamesHub 提供哪些类型的在线小游戏？</h3>
+                        <p>我们收录动作、赛车、益智、冒险、体育等热门 HTML5 小游戏，并持续扩充，每个专题提供精选推荐方便快速找到喜好。</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>这些小游戏需要下载或注册账号吗？</h3>
+                        <p>无需下载、无需注册，只要打开浏览器即可立即畅玩，桌面端与移动端皆支持即时加载。</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3>如何发现最新上线或热门的小游戏？</h3>
+                        <p>顶部导航的 Featured、New、Popular 专题页提供精选榜单，也可在分类页使用排序查看最新或热度最高的游戏。</p>
+                    </article>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Footer -->
@@ -306,9 +327,9 @@
                 <div class="footer-section">
                     <h3 class="footer-title">Quick Links</h3>
                     <ul class="footer-links">
-                        <li><a href="/collection.html?collection=featured">Featured Games</a></li>
-                        <li><a href="/collection.html?collection=new">New Games</a></li>
-                        <li><a href="/collection.html?collection=popular">Popular Games</a></li>
+                        <li><a href="/collections/featured" data-local-href="/collection.html?collection=featured">Featured Games</a></li>
+                        <li><a href="/collections/new" data-local-href="/collection.html?collection=new">New Games</a></li>
+                        <li><a href="/collections/popular" data-local-href="/collection.html?collection=popular">Popular Games</a></li>
                         <li><a href="/random">Random Game</a></li>
                     </ul>
                 </div>
@@ -403,6 +424,7 @@
     <script src="config.js"></script>
     
     <!-- Application Scripts -->
+    <script src="assets/js/localFallback.js"></script>
     <script src="assets/js/gameData.js"></script>
     <script src="assets/js/gameManager.js"></script>
     <script src="assets/js/main.js"></script>
@@ -414,6 +436,38 @@
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "MiniGamesHub 提供哪些类型的在线小游戏？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "MiniGamesHub 收录动作、赛车、益智、冒险、体育等热门 HTML5 小游戏，并坚持持续扩充与精选推荐，帮助玩家快速找到喜欢的玩法。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "这些小游戏需要下载或注册账号吗？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "所有小游戏均可直接在浏览器中游玩，无需下载安装，也不需要注册账号，桌面与移动端都可即开即玩。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "如何发现最新上线或热门的小游戏？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "你可以通过导航访问 Featured、New、Popular 专题页查看精选榜单，也可以在分类页使用排序功能，发现最新或人气最高的小游戏。"
+                }
+            }
+        ]
+    }
     </script>
 </body>
 </html>

@@ -4,14 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MiniGamesHub Collections</title>
-    <meta name="description" content="Discover curated game collections on MiniGamesHub including featured, popular, newest and category-based picks.">
+    <meta name="description" content="Discover curated featured, new and popular HTML5 browser games on MiniGamesHub and play instantly without downloads.">
     <meta name="robots" content="index, follow">
-    
+    <link rel="canonical" id="canonical-link" href="https://minigameshub.co/collections/featured">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" id="og-title" content="Featured HTML5 Games | MiniGamesHub">
+    <meta property="og:description" id="og-description" content="Discover curated featured HTML5 browser games on MiniGamesHub and start playing instantly.">
+    <meta property="og:url" id="og-url" content="https://minigameshub.co/collections/featured">
+    <meta property="og:image" content="https://minigameshub.co/assets/images/og-image.jpg">
+
     <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
     <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json" id="collection-structured-data"></script>
 </head>
 <body data-page-context="collection">
     <div id="loading-screen" class="loading-screen" aria-hidden="true">
@@ -49,13 +57,13 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a href="/collection.html?collection=featured" class="nav-link">Featured</a>
+                        <a href="/collections/featured" class="nav-link" data-local-href="/collection.html?collection=featured">Featured</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/collection.html?collection=new" class="nav-link">New Games</a>
+                        <a href="/collections/new" class="nav-link" data-local-href="/collection.html?collection=new">New Games</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/collection.html?collection=popular" class="nav-link">Popular</a>
+                        <a href="/collections/popular" class="nav-link" data-local-href="/collection.html?collection=popular">Popular</a>
                     </li>
                 </ul>
             </div>
@@ -103,7 +111,9 @@
                 <nav class="breadcrumb" aria-label="Breadcrumb">
                     <a href="/">Home</a>
                     <span>›</span>
-                    <span id="collection-breadcrumb">Collections</span>
+                    <a href="/collections/featured" id="collection-breadcrumb-root" style="display:none">Collections</a>
+                    <span id="collection-breadcrumb-separator" style="display:none">›</span>
+                    <span id="collection-breadcrumb">Featured Games</span>
                 </nav>
                 <h1 class="collection-title" id="collection-title">Discover Games</h1>
                 <p class="collection-description" id="collection-description">
@@ -177,9 +187,9 @@
                 <div class="footer-section">
                     <h3 class="footer-title">Quick Links</h3>
                     <ul class="footer-links">
-                        <li><a href="/collection.html?collection=featured">Featured Games</a></li>
-                        <li><a href="/collection.html?collection=new">New Games</a></li>
-                        <li><a href="/collection.html?collection=popular">Popular Games</a></li>
+                        <li><a href="/collections/featured" data-local-href="/collection.html?collection=featured">Featured Games</a></li>
+                        <li><a href="/collections/new" data-local-href="/collection.html?collection=new">New Games</a></li>
+                        <li><a href="/collections/popular" data-local-href="/collection.html?collection=popular">Popular Games</a></li>
                         <li><a href="/random">Random Game</a></li>
                     </ul>
                 </div>
@@ -254,6 +264,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/config.js"></script>
+    <script src="/assets/js/localFallback.js"></script>
     <script src="/assets/js/gameData.js"></script>
     <script src="/assets/js/gameManager.js"></script>
     <script src="/assets/js/main.js"></script>

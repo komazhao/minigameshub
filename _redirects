@@ -16,10 +16,17 @@ https://www.minigameshub.co/* https://minigameshub.co/:splat 301!
 /category/:slug /collection.html?category=:slug 200
 
 # 特殊页面
-/featured /collection.html?collection=featured 200
-/new-games /collection.html?collection=new 200
-/popular /collection.html?collection=popular 200
+/featured /collections/featured 301
+/new-games /collections/new 301
+/popular /collections/popular 301
 /random /index.html 200
+
+# 专题集合页
+/collections /collections/featured 301
+/collections/featured /collection.html?collection=featured 200
+/collections/new /collection.html?collection=new 200
+/collections/popular /collection.html?collection=popular 200
+/collections/category/:slug /collection.html?category=:slug 200
 
 # 搜索页面
 /search /search.html 200
@@ -37,18 +44,18 @@ https://www.minigameshub.co/* https://minigameshub.co/:splat 301!
 /play/:slug /game.html?slug=:slug 200
 
 # 分类别名
-/action /collection.html?category=action 200
-/racing /collection.html?category=racing 200
-/puzzle /collection.html?category=puzzle 200
-/sports /collection.html?category=sports 200
-/adventure /collection.html?category=adventure 200
-/arcade /collection.html?category=arcade 200
-/shooting /collection.html?category=shooting 200
-/simulation /collection.html?category=simulation 200
+/action /collections/category/action 301
+/racing /collections/category/racing 301
+/puzzle /collections/category/puzzle 301
+/sports /collections/category/sports 301
+/adventure /collections/category/adventure 301
+/arcade /collections/category/arcade 301
+/shooting /collections/category/shooting 301
+/simulation /collections/category/simulation 301
 
 # 旧版本兼容性重定向 (如果从其他系统迁移)
 /games/* /game.html?id=:splat 301
-/categories/* /collection.html?category=:splat 301
+/categories/* /collections/category/:splat 301
 
 # 错误页面
 /404 /404.html 200

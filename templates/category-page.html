@@ -11,20 +11,20 @@
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://minigameshub.co/categories/{{CATEGORY_SLUG}}">
+    <meta property="og:url" content="https://minigameshub.co/collections/category/{{CATEGORY_SLUG}}">
     <meta property="og:title" content="{{CATEGORY_NAME}} Games - Free Online {{CATEGORY_NAME}} Games">
     <meta property="og:description" content="Play the best free {{CATEGORY_NAME}} games online! Discover {{GAME_COUNT}} amazing {{CATEGORY_NAME}} games.">
     <meta property="og:image" content="https://minigameshub.co/assets/images/categories/{{CATEGORY_SLUG}}.jpg">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://minigameshub.co/categories/{{CATEGORY_SLUG}}">
+    <meta property="twitter:url" content="https://minigameshub.co/collections/category/{{CATEGORY_SLUG}}">
     <meta property="twitter:title" content="{{CATEGORY_NAME}} Games - Free Online {{CATEGORY_NAME}} Games">
     <meta property="twitter:description" content="Play the best free {{CATEGORY_NAME}} games online! Discover {{GAME_COUNT}} amazing {{CATEGORY_NAME}} games.">
     <meta property="twitter:image" content="https://minigameshub.co/assets/images/categories/{{CATEGORY_SLUG}}.jpg">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://minigameshub.co/categories/{{CATEGORY_SLUG}}">
+    <link rel="canonical" href="https://minigameshub.co/collections/category/{{CATEGORY_SLUG}}">
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
@@ -45,7 +45,7 @@
         "@type": "CollectionPage",
         "name": "{{CATEGORY_NAME}} Games",
         "description": "{{CATEGORY_DESCRIPTION}}",
-        "url": "https://minigameshub.co/categories/{{CATEGORY_SLUG}}",
+        "url": "https://minigameshub.co/collections/category/{{CATEGORY_SLUG}}",
         "mainEntity": {
             "@type": "ItemList",
             "name": "{{CATEGORY_NAME}} Games",
@@ -67,7 +67,8 @@
                 {
                     "@type": "ListItem",
                     "position": 2,
-                    "name": "{{CATEGORY_NAME}} Games"
+                    "name": "{{CATEGORY_NAME}} Games",
+                    "item": "https://minigameshub.co/collections/category/{{CATEGORY_SLUG}}"
                 }
             ]
         },
@@ -111,10 +112,10 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a href="/collection.html?collection=featured" class="nav-link">Featured</a>
+                        <a href="/collections/featured" class="nav-link" data-local-href="/collection.html?collection=featured">Featured</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/collection.html?collection=popular" class="nav-link">Popular</a>
+                        <a href="/collections/popular" class="nav-link" data-local-href="/collection.html?collection=popular">Popular</a>
                     </li>
                 </ul>
             </div>
@@ -333,9 +334,9 @@
                 <div class="footer-section">
                     <h3 class="footer-title">Quick Links</h3>
                     <ul class="footer-links">
-                        <li><a href="/collection.html?collection=featured">Featured Games</a></li>
-                        <li><a href="/collection.html?collection=new">New Games</a></li>
-                        <li><a href="/collection.html?collection=popular">Popular Games</a></li>
+                        <li><a href="/collections/featured" data-local-href="/collection.html?collection=featured">Featured Games</a></li>
+                        <li><a href="/collections/new" data-local-href="/collection.html?collection=new">New Games</a></li>
+                        <li><a href="/collections/popular" data-local-href="/collection.html?collection=popular">Popular Games</a></li>
                         <li><a href="/random">Random Game</a></li>
                     </ul>
                 </div>
@@ -519,6 +520,7 @@
         });
     </script>
     
+    <script src="/assets/js/localFallback.js"></script>
     <script src="/assets/js/gameData.js"></script>
     <script src="/assets/js/gameManager.js"></script>
     

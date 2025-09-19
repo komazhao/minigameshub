@@ -101,7 +101,7 @@
                 "@type": "ListItem",
                 "position": 2,
                 "name": "Racing",
-                "item": "https://minigameshub.co/categories/racing"
+                "item": "https://minigameshub.co/collections/category/racing"
             },
             {
                 "@type": "ListItem",
@@ -144,17 +144,17 @@
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle">Categories</a>
                         <ul class="dropdown-menu">
-                            <li><a href="/categories/action" class="nav-link">Action</a></li>
-                            <li><a href="/categories/racing" class="nav-link">Racing</a></li>
-                            <li><a href="/categories/puzzle" class="nav-link">Puzzle</a></li>
-                            <li><a href="/categories/sports" class="nav-link">Sports</a></li>
+                            <li><a href="/collections/category/action" data-local-href="/collection.html?category=action" class="nav-link">Action</a></li>
+                            <li><a href="/collections/category/racing" data-local-href="/collection.html?category=racing" class="nav-link">Racing</a></li>
+                            <li><a href="/collections/category/puzzle" data-local-href="/collection.html?category=puzzle" class="nav-link">Puzzle</a></li>
+                            <li><a href="/collections/category/sports" data-local-href="/collection.html?category=sports" class="nav-link">Sports</a></li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a href="/featured" class="nav-link">Featured</a>
+                        <a href="/collections/featured" data-local-href="/collection.html?collection=featured" class="nav-link">Featured</a>
                     </li>
                     <li class="nav-item">
-                        <a href="/popular" class="nav-link">Popular</a>
+                        <a href="/collections/popular" data-local-href="/collection.html?collection=popular" class="nav-link">Popular</a>
                     </li>
                 </ul>
             </div>
@@ -180,7 +180,7 @@
                     <meta itemprop="position" content="1">
                 </li>
                 <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                    <a itemprop="item" href="/categories/racing">
+                    <a itemprop="item" href="/collections/category/racing" data-local-href="/collection.html?category=racing">
                         <span itemprop="name">Racing</span>
                     </a>
                     <meta itemprop="position" content="2">
@@ -213,7 +213,7 @@
                             </div>
                             
                             <div class="game-category-badge">
-                                <a href="/categories/racing" class="category-link">Racing</a>
+                                <a href="/collections/category/racing" data-local-href="/collection.html?category=racing" class="category-link">Racing</a>
                             </div>
                         </div>
                         
@@ -328,7 +328,7 @@
                             <h3>Game Details</h3>
                             <dl class="details-list">
                                 <dt>Category:</dt>
-                                <dd><a href="/categories/racing">Racing</a></dd>
+                                <dd><a href="/collections/category/racing" data-local-href="/collection.html?category=racing">Racing</a></dd>
                                 
                                 <dt>Rating:</dt>
                                 <dd>4.2/5 (63 plays)</dd>
@@ -402,19 +402,19 @@
                 <div class="footer-section">
                     <h3 class="footer-title">Game Categories</h3>
                     <ul class="footer-links">
-                        <li><a href="/categories/action">Action Games</a></li>
-                        <li><a href="/categories/racing">Racing Games</a></li>
-                        <li><a href="/categories/puzzle">Puzzle Games</a></li>
-                        <li><a href="/categories/sports">Sports Games</a></li>
+                        <li><a href="/collections/category/action" data-local-href="/collection.html?category=action">Action Games</a></li>
+                        <li><a href="/collections/category/racing" data-local-href="/collection.html?category=racing">Racing Games</a></li>
+                        <li><a href="/collections/category/puzzle" data-local-href="/collection.html?category=puzzle">Puzzle Games</a></li>
+                        <li><a href="/collections/category/sports" data-local-href="/collection.html?category=sports">Sports Games</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
                     <h3 class="footer-title">Quick Links</h3>
                     <ul class="footer-links">
-                        <li><a href="/featured">Featured Games</a></li>
-                        <li><a href="/new-games">New Games</a></li>
-                        <li><a href="/popular">Popular Games</a></li>
+                        <li><a href="/collections/featured" data-local-href="/collection.html?collection=featured">Featured Games</a></li>
+                        <li><a href="/collections/new" data-local-href="/collection.html?collection=new">New Games</a></li>
+                        <li><a href="/collections/popular" data-local-href="/collection.html?collection=popular">Popular Games</a></li>
                         <li><a href="/random">Random Game</a></li>
                     </ul>
                 </div>
@@ -569,6 +569,7 @@
             });
     </script>
     
+    <script src="/assets/js/localFallback.js"></script>
     <script src="/assets/js/gameData.js"></script>
     <script src="/assets/js/gameManager.js"></script>
     

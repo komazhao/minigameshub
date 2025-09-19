@@ -29,9 +29,23 @@ class CollectionPage {
     }
 
     parseParams() {
+        const pathSegments = window.location.pathname.split('/').filter(Boolean);
         const params = new URLSearchParams(window.location.search);
-        const collectionParam = (params.get('collection') || '').toLowerCase();
-        const categoryParam = (params.get('category') || params.get('slug') || '').toLowerCase();
+
+        let collectionParam = (params.get('collection') || '').toLowerCase();
+        let categoryParam = (params.get('category') || params.get('slug') || '').toLowerCase();
+
+        if (pathSegments[0] === 'collections') {
+            const second = pathSegments[1] ? decodeURIComponent(pathSegments[1].toLowerCase()) : '';
+            if (second === 'category') {
+                const third = pathSegments[2] ? decodeURIComponent(pathSegments[2].toLowerCase()) : '';
+                if (third) {
+                    categoryParam = third;
+                }
+            } else if (second) {
+                collectionParam = second;
+            }
+        }
 
         if (categoryParam) {
             this.mode = 'category';
@@ -60,6 +74,8 @@ class CollectionPage {
             collectionDescription: document.getElementById('collection-description'),
             collectionSubtitle: document.getElementById('collection-subtitle'),
             collectionBreadcrumb: document.getElementById('collection-breadcrumb'),
+            collectionBreadcrumbRoot: document.getElementById('collection-breadcrumb-root'),
+            collectionBreadcrumbSeparator: document.getElementById('collection-breadcrumb-separator'),
             collectionCount: document.getElementById('collection-count'),
             collectionGrid: document.getElementById('collection-grid'),
             collectionEmpty: document.getElementById('collection-empty'),
@@ -112,14 +128,14 @@ class CollectionPage {
         if (this.elements.categoriesDropdown) {
             this.elements.categoriesDropdown.innerHTML = categories.map(category => `
                 <li>
-                    <a href="/collection.html?category=${category.slug}" class="dropdown-link">${category.name}</a>
+                    <a href="/collections/category/${category.slug}" class="dropdown-link" data-local-href="/collection.html?category=${category.slug}">${category.name}</a>
                 </li>
             `).join('');
         }
 
         if (this.elements.footerCategories) {
             this.elements.footerCategories.innerHTML = categories.map(category => `
-                <li><a href="/collection.html?category=${category.slug}">${category.name}</a></li>
+                <li><a href="/collections/category/${category.slug}" data-local-href="/collection.html?category=${category.slug}">${category.name}</a></li>
             `).join('');
         }
     }
@@ -236,6 +252,8 @@ class CollectionPage {
         if (window.gameManager) {
             window.gameManager.updateFavoritesUI();
         }
+
+        this.updateStructuredData();
     }
 
     createGameCard(game) {
@@ -324,6 +342,8 @@ class CollectionPage {
         if (this.elements.collectionCount) {
             this.elements.collectionCount.textContent = `共 ${this.allGames.length} 款游戏`;
         }
+        this.currentTitle = title;
+        this.currentDescription = description;
         document.title = `${title} | MiniGamesHub.co`;
     }
 
@@ -333,7 +353,7 @@ class CollectionPage {
             metaDesc.setAttribute('content', description);
         }
 
-        let canonical = document.querySelector('link[rel="canonical"]');
+        let canonical = document.getElementById('canonical-link') || document.querySelector('link[rel="canonical"]');
         if (!canonical) {
             canonical = document.createElement('link');
             canonical.rel = 'canonical';
@@ -344,21 +364,52 @@ class CollectionPage {
         let canonicalPath = window.location.pathname + window.location.search;
 
         if (this.mode === 'collection') {
-            canonicalPath = this.collectionType === 'featured'
-                ? '/featured'
-                : this.collectionType === 'new'
-                    ? '/new-games'
-                    : '/popular';
+            canonicalPath = `/collections/${
+                this.collectionType === 'featured'
+                    ? 'featured'
+                    : this.collectionType === 'new'
+                        ? 'new'
+                        : 'popular'
+            }`;
         } else if (this.mode === 'category' && this.currentCategory) {
-            canonicalPath = `/categories/${this.currentCategory.slug}`;
+            canonicalPath = `/collections/category/${this.currentCategory.slug}`;
         }
 
-        canonical.href = `${origin}${canonicalPath}`;
+        const canonicalUrl = `${origin}${canonicalPath}`;
+        canonical.href = canonicalUrl;
+        this.currentCanonicalUrl = canonicalUrl;
+
+        const ogTitle = document.getElementById('og-title');
+        if (ogTitle) {
+            ogTitle.setAttribute('content', title);
+        }
+        const ogDescription = document.getElementById('og-description');
+        if (ogDescription) {
+            ogDescription.setAttribute('content', description);
+        }
+        const ogUrl = document.getElementById('og-url');
+        if (ogUrl) {
+            ogUrl.setAttribute('content', canonicalUrl);
+        }
     }
 
     updateBreadcrumb(label) {
         if (this.elements.collectionBreadcrumb) {
             this.elements.collectionBreadcrumb.textContent = label;
+        }
+        const root = this.elements.collectionBreadcrumbRoot;
+        const separator = this.elements.collectionBreadcrumbSeparator;
+
+        if (root && separator) {
+            if (this.mode === 'category') {
+                root.style.display = '';
+                separator.style.display = '';
+                root.textContent = 'Collections';
+                root.href = '/collections/featured';
+            } else {
+                root.style.display = 'none';
+                separator.style.display = 'none';
+            }
         }
     }
 
@@ -397,6 +448,8 @@ class CollectionPage {
         if (this.elements.collectionCount) {
             this.elements.collectionCount.textContent = '共 0 款游戏';
         }
+
+        this.updateStructuredData();
     }
 
     hideEmptyState() {
@@ -455,6 +508,88 @@ class CollectionPage {
         if (!window.gameDataManager) return 'Game';
         const category = window.gameDataManager.getCategoryById(categoryId);
         return category ? category.name : 'Game';
+    }
+
+    updateStructuredData() {
+        const structuredEl = document.getElementById('collection-structured-data');
+        if (!structuredEl) return;
+
+        if (!this.sortedGames || this.sortedGames.length === 0) {
+            structuredEl.textContent = '';
+            return;
+        }
+
+        const origin = window.location.origin;
+        const canonicalUrl = this.currentCanonicalUrl || `${origin}${window.location.pathname}`;
+        const title = this.currentTitle || document.title.replace(' | MiniGamesHub.co', '');
+        const description = this.currentDescription || 'Play curated HTML5 mini games on MiniGamesHub.';
+
+        const listItems = this.sortedGames.slice(0, 12).map((game, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            url: `${origin}/games/${game.slug}`,
+            name: game.name
+        }));
+
+        const pageSchema = {
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: title,
+            description,
+            url: canonicalUrl,
+            mainEntity: {
+                '@type': 'ItemList',
+                itemListElement: listItems
+            }
+        };
+
+        if (this.mode === 'category' && this.currentCategory) {
+            pageSchema.about = {
+                '@type': 'Thing',
+                name: this.currentCategory.name
+            };
+        }
+
+        const breadcrumbItems = [
+            {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Home',
+                item: `${origin}/`
+            }
+        ];
+
+        if (this.mode === 'category' && this.currentCategory) {
+            breadcrumbItems.push(
+                {
+                    '@type': 'ListItem',
+                    position: 2,
+                    name: 'Collections',
+                    item: `${origin}/collections/featured`
+                },
+                {
+                    '@type': 'ListItem',
+                    position: 3,
+                    name: this.currentCategory.name,
+                    item: canonicalUrl
+                }
+            );
+        } else {
+            breadcrumbItems.push({
+                '@type': 'ListItem',
+                position: 2,
+                name: title,
+                item: canonicalUrl
+            });
+        }
+
+        const breadcrumbSchema = {
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: breadcrumbItems
+        };
+
+        structuredEl.textContent = JSON.stringify([pageSchema, breadcrumbSchema]);
     }
 }
 

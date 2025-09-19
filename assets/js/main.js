@@ -304,7 +304,7 @@ class MiniGamesHubApp {
         if (this.elements.categoriesDropdown && categories.length > 0) {
             this.elements.categoriesDropdown.innerHTML = categories.map(category => `
                 <li>
-                    <a href="/collection.html?category=${category.slug}" class="dropdown-link" data-category="${category.id}">
+                    <a href="/collections/category/${category.slug}" class="dropdown-link" data-category="${category.id}" data-local-href="/collection.html?category=${category.slug}">
                         ${category.name}
                     </a>
                 </li>
@@ -328,14 +328,14 @@ class MiniGamesHubApp {
         // 填充页脚分类链接
         if (this.elements.footerCategories) {
             this.elements.footerCategories.innerHTML = categories.map(category => `
-                <li><a href="/collection.html?category=${category.slug}" data-category="${category.id}">${category.name}</a></li>
+                <li><a href="/collections/category/${category.slug}" data-category="${category.id}" data-local-href="/collection.html?category=${category.slug}">${category.name}</a></li>
             `).join('');
         }
 
         // 填充分类网格
         if (this.elements.categoriesGrid) {
             this.elements.categoriesGrid.innerHTML = categories.map(category => `
-                <a class="category-card" data-category="${category.id}" href="/collection.html?category=${category.slug}">
+                <a class="category-card" data-category="${category.id}" href="/collections/category/${category.slug}" data-local-href="/collection.html?category=${category.slug}">
                     <div class="category-icon">🎮</div>
                     <h3>${category.name}</h3>
                     <p>${category.description || ''}</p>
