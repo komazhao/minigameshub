@@ -560,19 +560,21 @@
     <script src="/assets/js/gameManager.js"></script>
     
     <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7CTFS1X9ZS"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'GA_MEASUREMENT_ID');
-        
-        // Track category page view
-        gtag('event', 'page_view', {
-            'page_title': 'Arcade Games',
-            'page_location': window.location.href,
-            'category': 'Arcade'
-        });
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-7CTFS1X9ZS');
+
+      // Track category page view
+      gtag('event', 'page_view', {
+        'page_title': 'Arcade Games',
+        'page_location': window.location.href,
+        'category': 'Arcade'
+      });
     </script>
 </body>
 </html>
