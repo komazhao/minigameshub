@@ -148,6 +148,9 @@ function writeSitemapPages(site, lastmod) {
     { loc: `${site}/collections/new`, changefreq: 'daily', priority: '0.9' },
     { loc: `${site}/collections/popular`, changefreq: 'daily', priority: '0.9' },
     { loc: `${site}/random`, changefreq: 'daily', priority: '0.6' },
+    { loc: `${site}/privacy-policy`, changefreq: 'yearly', priority: '0.2' },
+    { loc: `${site}/terms-of-service`, changefreq: 'yearly', priority: '0.2' },
+    { loc: `${site}/contact`, changefreq: 'yearly', priority: '0.3' },
     { loc: `${site}/sitemap.xml`, changefreq: 'weekly', priority: '0.3' }
   ];
   const xml = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
@@ -220,6 +223,9 @@ function main() {
   bumpSwRegister(version);
   updateHtmlAssetVersion('index.html', version);
   updateHtmlAssetVersion('collection.html', version);
+  updateHtmlAssetVersion('privacy-policy.html', version);
+  updateHtmlAssetVersion('terms-of-service.html', version);
+  updateHtmlAssetVersion('contact.html', version);
 
   // 2) Collect content
   const { categories, games } = collectGeneratedPages();

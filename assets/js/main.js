@@ -230,6 +230,24 @@ class MiniGamesHubApp {
             this.updateSiteStats();
             this.updateFavoritesCount();
 
+            // Handle /random route: redirect to a random game detail page
+            try {
+                const path = (window.location && window.location.pathname || '').replace(/\/+$/, '');
+                if (path === '/random' && window.gameDataManager) {
+                    const pick = window.gameDataManager.getRandomGames(1);
+                    if (pick && pick.length) {
+                        const game = pick[0];
+                        const slug = game.slug || (window.gameDataManager.generateSlug ? window.gameDataManager.generateSlug(game.name || 'game') : 'game');
+                        if (slug) {
+                            window.location.replace(`/games/${slug}`);
+                            return;
+                        }
+                    }
+                }
+            } catch (e) {
+                // no-op for random redirect
+            }
+
             console.log('MiniGamesHub app initialized');
         } catch (error) {
             console.warn('onDataLoaded error (possibly missing DOM elements):', error);
