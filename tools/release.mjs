@@ -84,9 +84,27 @@ function updateHtmlAssetVersion(file, version) {
     const newUrl = `${pathOnly}?${params.toString()}${hash}`;
     return `${attr}=\"${newUrl}\"`;
   });
+  // Also handle single-quoted attributes
+  html = html.replace(/(href|src)=\'([^\']+)\'/g, (m, attr, url) => {
+    if (/^https?:/i.test(url)) return m;
+    const isTarget = /\.css(\?|#|$)/i.test(url) || /\.js(\?|#|$)/i.test(url) || /(^|\/)config\.js(\?|#|$)/i.test(url);
+    if (!isTarget) return m;
+    const hashIndex = url.indexOf('#');
+    const hash = hashIndex >= 0 ? url.slice(hashIndex) : '';
+    const base = hashIndex >= 0 ? url.slice(0, hashIndex) : url;
+    const [pathOnly, qs] = base.split('?', 2);
+    const params = new URLSearchParams(qs || '');
+    params.set('v', version);
+    const newUrl = `${pathOnly}?${params.toString()}${hash}`;
+    return `${attr}=\'${newUrl}\'`;
+  });
   // Ensure swRegister injected on pages if not present
   if (!/swRegister\.js/.test(html)) {
-    html = html.replace(/<\/body>/i, `    <script src="assets/js/swRegister.js?v=${version}"></script>\n</body>`);
+    html = html.replace(/<\/body>/i, `    <script src="/assets/js/swRegister.js?v=${version}"></script>\n</body>`);
+  }
+  // Ensure navRouter injected on pages if not present
+  if (!/navRouter\.js/.test(html)) {
+    html = html.replace(/<\/body>/i, `    <script src="/assets/js/navRouter.js?v=${version}"></script>\n</body>`);
   }
   write(file, html);
 }
@@ -230,6 +248,17 @@ function main() {
 
   // 2) Collect content
   const { categories, games } = collectGeneratedPages();
+  // 2.1) Update versions for generated pages assets
+  const genDirs = [path.join('generated-pages','games'), path.join('generated-pages','categories')];
+  for (const dir of genDirs) {
+    if (exists(dir)) {
+      for (const f of fs.readdirSync(path.join(CWD, dir))) {
+        if (f.endsWith('.html')) {
+          updateHtmlAssetVersion(path.join(dir, f), version);
+        }
+      }
+    }
+  }
   const lastmod = formatDate(new Date());
 
   // 3) Sitemaps
