@@ -3,9 +3,9 @@
  * Provides caching, offline support, and performance optimization
  */
 
-const CACHE_NAME = 'minigameshub-v1.0.0';
-const GAME_CACHE_NAME = 'minigameshub-games-v1.0.0';
-const API_CACHE_NAME = 'minigameshub-api-v1.0.0';
+const CACHE_NAME = 'minigameshub-v20250921-01';
+const GAME_CACHE_NAME = 'minigameshub-games-v20250921-01';
+const API_CACHE_NAME = 'minigameshub-api-v20250921-01';
 
 // Assets to cache on install
 const STATIC_ASSETS = [
@@ -20,7 +20,8 @@ const STATIC_ASSETS = [
     '/assets/images/apple-touch-icon.png',
     '/assets/images/favicon-32x32.png',
     '/assets/images/favicon-16x16.png',
-    '/manifest.json'
+    '/manifest.json',
+    '/offline.html'
 ];
 
 // Game files patterns
@@ -144,37 +145,56 @@ function isAPIRequest(url) {
  * Handle static asset requests - Cache First strategy
  */
 async function handleStaticAsset(request) {
-    try {
-        // Try cache first
+    const url = request.url;
+    const isJS = url.endsWith('.js') || url.includes('.js?');
+    const isCSS = url.endsWith('.css') || url.includes('.css?');
+
+    // For critical assets (JS/CSS), prefer fresh network with cache fallback
+    if (isJS || isCSS) {
+        try {
+            const networkResponse = await fetch(new Request(request, { cache: 'no-cache' }));
+            if (networkResponse && networkResponse.ok) {
+                const cache = await caches.open(CACHE_NAME);
+                cache.put(request, networkResponse.clone());
+                return networkResponse;
+            }
+        } catch (e) {
+            // Ignore and try cache below
+        }
         const cachedResponse = await caches.match(request);
+        if (cachedResponse) return cachedResponse;
+        return fetch(request);
+    }
+
+    // For other assets, use cache-first with background revalidation
+    try {
+        const cachedResponse = await caches.match(request);
+        // Fire-and-forget background update
+        fetch(new Request(request, { cache: 'no-cache' }))
+            .then(networkResponse => {
+                if (networkResponse && networkResponse.ok) {
+                    caches.open(CACHE_NAME).then(cache => cache.put(request, networkResponse.clone()));
+                }
+            })
+            .catch(() => {});
+
         if (cachedResponse) {
             return cachedResponse;
         }
-        
-        // If not in cache, fetch from network
+
         const networkResponse = await fetch(request);
-        
-        // Cache the response if successful
         if (networkResponse.ok) {
             const cache = await caches.open(CACHE_NAME);
             cache.put(request, networkResponse.clone());
         }
-        
         return networkResponse;
-        
+
     } catch (error) {
         console.error('[SW] Error handling static asset:', error);
-        
-        // Return offline fallback if available
         if (request.url.includes('.html')) {
             return caches.match('/offline.html');
         }
-        
-        // Return generic error response
-        return new Response('Network error', { 
-            status: 503, 
-            statusText: 'Service Unavailable' 
-        });
+        return new Response('Network error', { status: 503, statusText: 'Service Unavailable' });
     }
 }
 

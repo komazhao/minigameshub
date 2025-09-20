@@ -18,18 +18,21 @@
   Cross-Origin-Embedder-Policy: unsafe-none
   Cross-Origin-Opener-Policy: same-origin-allow-popups
 
-# 静态资源缓存 (1年)
-/assets/*
+# 静态资源缓存
+
+# 优先：为 assets 下的图片长期缓存（1年）
+/assets/images/*
   Cache-Control: public, max-age=31536000, immutable
   
-/images/*
-  Cache-Control: public, max-age=31536000, immutable
+# 其他 /assets 下资源（JS/CSS 等）短缓存（1小时），避免发布后长时间旧版本
+/assets/*
+  Cache-Control: public, max-age=3600
   
 *.css
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=0, must-revalidate
   
 *.js
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=0, must-revalidate
   
 *.woff2
   Cache-Control: public, max-age=31536000, immutable
@@ -43,9 +46,9 @@
 *.webp
   Cache-Control: public, max-age=31536000, immutable
 
-# HTML 页面缓存 (1小时)
+# HTML 页面缓存（强制每次验证）
 /*.html
-  Cache-Control: public, max-age=3600
+  Cache-Control: public, max-age=0, must-revalidate
 
 # API 响应缓存 (5分钟)
 /api/*

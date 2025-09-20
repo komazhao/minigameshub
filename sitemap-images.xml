@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://minigameshub.co/games/starpoly</loc>
-    <lastmod>2025-09-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-    <image:image>
-      <image:loc>https://img.gamemonetize.com/stp68cw05n283o49a9n8qym64knqpbmz/512x384.jpg</image:loc>
-      <image:title>Starpoly</image:title>
-      <image:caption>Welcome to Starpoly, an exhilarating PC trading board game that ingeniously merges strategic gameplay with immersive elements.</image:caption>
-    </image:image>
-  </url>
-  <url>
     <loc>https://minigameshub.co/games/bus-school-park-driver</loc>
     <lastmod>2025-09-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
     <image:image>
       <image:loc>https://img.gamemonetize.com/i429yunzarak64517ysvdeki741nrdoc/512x384.jpg</image:loc>
-      <image:title>Bus School Park Driver</image:title>
-      <image:caption>Get ready to take control in Bus School Park Driver! This captivating simulation game places you in the driver&apos;s seat of a school bus.</image:caption>
+      <image:title>Bus School Park Driver - Play Free Online</image:title>
+      <image:caption>Bus School Park Driver - Play Free Online</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://minigameshub.co/games/starpoly</loc>
+    <lastmod>2025-09-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://img.gamemonetize.com/stp68cw05n283o49a9n8qym64knqpbmz/512x384.jpg</image:loc>
+      <image:title>Starpoly - Play Free Online</image:title>
+      <image:caption>Starpoly - Play Free Online</image:caption>
     </image:image>
   </url>
 </urlset>
