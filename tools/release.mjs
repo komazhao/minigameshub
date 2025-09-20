@@ -223,9 +223,10 @@ function main() {
   bumpSwRegister(version);
   updateHtmlAssetVersion('index.html', version);
   updateHtmlAssetVersion('collection.html', version);
-  updateHtmlAssetVersion('privacy-policy.html', version);
-  updateHtmlAssetVersion('terms-of-service.html', version);
-  updateHtmlAssetVersion('contact.html', version);
+  // Static content pages (.html-less paths use subfolder index.html)
+  updateHtmlAssetVersion(path.join('privacy-policy','index.html'), version);
+  updateHtmlAssetVersion(path.join('terms-of-service','index.html'), version);
+  updateHtmlAssetVersion(path.join('contact','index.html'), version);
 
   // 2) Collect content
   const { categories, games } = collectGeneratedPages();

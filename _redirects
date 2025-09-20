@@ -64,10 +64,5 @@ https://www.minigameshub.co/* https://minigameshub.co/:splat 301!
 # SPA 回退 - 所有未匹配的路由返回首页
 /* /index.html 200
 
-# --- Static content pages mapping (ensure clean paths resolve) ---
-/privacy-policy /privacy-policy.html 200
-/terms-of-service /terms-of-service.html 200
-/contact /contact.html 200
-
 # SEO friendly game pages -> generated static pages
 /games/:slug /generated-pages/games/:slug.html 200
