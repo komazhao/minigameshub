@@ -18,6 +18,16 @@ Disallow: /admin/
 Disallow: /private/
 Disallow: /temp/
 Disallow: /generated-pages/
+Disallow: /seo/
+Disallow: /tools/
+Disallow: /venv/
+
+# Disallow non-page file types and config files
+Disallow: /*.md$
+Disallow: /*.sql$
+Disallow: /*.py$
+Disallow: /_headers
+Disallow: /_redirects
 
 # Disallow common tracking params to avoid duplicate content
 Disallow: /*?utm_*

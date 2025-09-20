@@ -7,6 +7,7 @@
   X-Frame-Options: SAMEORIGIN
   X-XSS-Protection: 1; mode=block
   Referrer-Policy: strict-origin-when-cross-origin
+  Content-Language: en
   
   # 强制 HTTPS
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
@@ -50,6 +51,10 @@
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
 
+# 指定 XML/站点地图语言
+/*.xml
+  Content-Language: en
+  
 # API 响应缓存 (5分钟)
 /api/*
   Cache-Control: public, max-age=300
@@ -72,3 +77,33 @@
 /games/*
   X-Frame-Options: ALLOWALL
   Content-Security-Policy: frame-ancestors *
+
+# ===========================
+# 防止非页面文件被搜索引擎收录
+# ===========================
+
+# 配置与说明文件
+/README.md
+  X-Robots-Tag: noindex, nofollow, noarchive
+/_headers
+  X-Robots-Tag: noindex, nofollow, noarchive
+/_redirects
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+# 中文与内部文档
+/网站部署上线完整指导.md
+  X-Robots-Tag: noindex, nofollow, noarchive
+/本地测试指南.md
+  X-Robots-Tag: noindex, nofollow, noarchive
+/seo/SEO首页冲刺计划.md
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+# 数据与脚本（不应被索引）
+/games.sql
+  X-Robots-Tag: noindex, nofollow, noarchive
+/final_data.sql
+  X-Robots-Tag: noindex, nofollow, noarchive
+/fixed_schema.sql
+  X-Robots-Tag: noindex, nofollow, noarchive
+/cleanup.sql
+  X-Robots-Tag: noindex, nofollow, noarchive

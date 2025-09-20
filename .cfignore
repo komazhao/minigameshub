@@ -1,0 +1,28 @@
+# Exclude non-site docs and dev assets from Cloudflare Pages deploy
+
+# Docs and notes
+*.md
+!privacy-policy/index.html
+!terms-of-service/index.html
+!contact/index.html
+
+# Data and DB dumps
+*.sql
+
+# Local tooling and environments
+venv/
+tools/
+seo/
+.claude/
+.git/
+
+# Python scripts (not needed at runtime)
+*.py
+
+# Backups and temporary files
+*.backup
+*.old
+*.tmp
+
+# Do NOT exclude built pages
+!generated-pages/
