@@ -32,22 +32,22 @@ class GameDataManager {
     }
     
     async init() {
-        console.log('GameDataManager 初始化开始...');
+        console.log('GameDataManager initializing...');
 
         try {
-            console.log('1. 初始化 Supabase...');
+            console.log('1. Initializing Supabase...');
             await this.initializeSupabase();
 
-            console.log('2. 加载数据...');
+            console.log('2. Loading data...');
             await this.loadData();
 
-            console.log('3. 设置缓存...');
+            console.log('3. Setting up cache...');
             this.setupCache();
 
-            console.log('GameDataManager 初始化完成');
+            console.log('GameDataManager initialized');
         } catch (error) {
             console.error('GameDataManager initialization failed:', error);
-            console.log('尝试使用默认数据作为回退...');
+            console.log('Trying default data as fallback...');
 
             // 使用默认数据作为回退
             this.useDefaultData();
@@ -122,14 +122,14 @@ class GameDataManager {
         this.emit('loading', true);
 
         try {
-            console.log('开始从数据库加载数据...');
+            console.log('Start loading data from database...');
 
             if (!this.supabase) {
                 throw new Error('Supabase not initialized');
             }
 
             // 并行加载游戏和分类数据
-            console.log('加载游戏和分类数据...');
+            console.log('Loading games and categories...');
             const [gamesResult, categoriesResult] = await Promise.all([
                 this.loadGamesFromDB(),
                 this.loadCategoriesFromDB()
@@ -138,11 +138,11 @@ class GameDataManager {
             this.games = gamesResult || [];
             this.categories = categoriesResult || [];
 
-            console.log(`从数据库加载了 ${this.games.length} 个游戏和 ${this.categories.length} 个分类`);
+            console.log(`Loaded ${this.games.length} games and ${this.categories.length} categories from database`);
 
             // 如果数据库数据为空，使用默认数据
             if (this.games.length === 0) {
-                console.log('数据库数据为空，使用默认数据...');
+                console.log('Database is empty, using default data...');
                 this.games = this.getDefaultGames();
                 this.categories = this.getDefaultCategories();
             }
@@ -161,11 +161,11 @@ class GameDataManager {
             this.loaded = true;
             this.emit('loaded', this.data);
 
-            console.log(`数据加载完成：${this.games.length} 个游戏，${this.categories.length} 个分类`);
+            console.log(`Data loaded: ${this.games.length} games, ${this.categories.length} categories`);
 
         } catch (error) {
             console.error('Error loading game data from Supabase:', error);
-            console.log('数据库加载失败，使用默认数据...');
+            console.log('Database load failed, using default data...');
 
             // 使用默认数据作为完全回退
             this.games = this.getDefaultGames();
@@ -183,7 +183,7 @@ class GameDataManager {
             this.loaded = true;
             this.emit('loaded', this.data);
 
-            console.log(`使用默认数据：${this.games.length} 个游戏，${this.categories.length} 个分类`);
+            console.log(`Using default data: ${this.games.length} games, ${this.categories.length} categories`);
         } finally {
             this.loading = false;
             this.emit('loading', false);
@@ -310,8 +310,8 @@ class GameDataManager {
                 id: game.game_id || game.id,
                 game_id: game.game_id || game.id,
                 name: game.name || game.game_name || 'Untitled Game',
-                description: game.description || game.game_description || '一款有趣的在线游戏，快来体验吧！',
-                instructions: game.instructions || game.game_instructions || game.how_to_play || '使用鼠标或键盘控制游戏。具体操作请参考游戏内的说明。',
+                description: game.description || game.game_description || 'A fun online game — give it a try!',
+                instructions: game.instructions || game.game_instructions || game.how_to_play || 'Use your mouse or keyboard to play. See in-game instructions for details.',
 
                 // 游戏文件和资源
                 file: game.file || game.game_file || game.game_url || '',

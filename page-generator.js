@@ -150,7 +150,7 @@ class PageGenerator {
      * 生成单个游戏页面HTML
      */
     generateGamePage(game) {
-        const category = this.gameData.categories.find(cat => cat.id === game.category) || { name: '游戏', slug: 'games' };
+        const category = this.gameData.categories.find(cat => cat.id === game.category) || { name: 'Game', slug: 'games' };
         
         // 生成相关游戏
         const relatedGames = this.getRelatedGames(game.game_id, 6);
@@ -178,7 +178,7 @@ class PageGenerator {
             '{{GAME_TAGLINE}}': this.escapeHtml(this.generateGameTagline(game)),
             '{{STAR_RATING_HTML}}': this.generateStarRating(game.rating),
             '{{GAME_TAGS_HTML}}': this.generateGameTags(game),
-            '{{MOBILE_FRIENDLY}}': game.mobile ? '是' : '否',
+            '{{MOBILE_FRIENDLY}}': game.mobile ? 'Yes' : 'No',
             '{{DATE_ADDED}}': game.date_added ? new Date(game.date_added * 1000).toISOString() : new Date().toISOString(),
             '{{RELATED_GAMES_HTML}}': this.generateRelatedGamesHTML(relatedGames)
         };
@@ -275,7 +275,7 @@ class PageGenerator {
      */
     generateRelatedGamesHTML(relatedGames) {
         if (!relatedGames || relatedGames.length === 0) {
-            return '<p>暂无相关游戏。</p>';
+            return '<p>No related games.</p>';
         }
         return this.generateGamesGridHTML(relatedGames);
     }
@@ -290,7 +290,7 @@ class PageGenerator {
                 <div class="game-card" data-game-id="${game.game_id}">
                     <div class="game-image">
                         <img src="${game.image}" alt="${this.escapeHtml(game.name)}" loading="lazy">
-                        ${game.featured ? '<div class="game-badge">特色</div>' : ''}
+                        ${game.featured ? '<div class="game-badge">Featured</div>' : ''}
                         <button class="game-favorite" data-game-id="${game.game_id}">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -303,9 +303,9 @@ class PageGenerator {
                         <div class="game-meta">
                             <div class="game-rating">
                                 <div class="stars">${this.generateStarRating(game.rating)}</div>
-                                <span class="plays">${game.plays.toLocaleString()} 次播放</span>
+                                <span class="plays">${game.plays.toLocaleString()} plays</span>
                             </div>
-                            <span class="game-category">${category ? this.escapeHtml(category.name) : '游戏'}</span>
+                            <span class="game-category">${category ? this.escapeHtml(category.name) : 'Game'}</span>
                         </div>
                     </div>
                 </div>
@@ -324,7 +324,7 @@ class PageGenerator {
                 </div>
                 <h3 class="category-name">${this.escapeHtml(category.name)}</h3>
                 <p class="category-description">${this.escapeHtml(category.description)}</p>
-                <span class="category-count">${category.game_count} 个游戏</span>
+                <span class="category-count">${category.game_count} games</span>
             </div>
         `).join('');
     }
@@ -383,11 +383,11 @@ class PageGenerator {
         const categoryName = category ? category.name.toLowerCase() : 'game';
         
         const taglines = [
-            `一个令人兴奋的${categoryName}游戏，会让您娱乐数小时！`,
-            `体验这个惊人的${categoryName}冒险的刺激！`,
-            `在这个具有挑战性的${categoryName}游戏中测试您的技能！`,
-            `加入这个受欢迎的${categoryName}游戏的乐趣！`,
-            `发现这个精彩的${categoryName}体验的刺激！`
+            `An exciting ${categoryName} game that will entertain you for hours!`,
+            `Feel the thrill of this amazing ${categoryName} adventure!`,
+            `Test your skills in this challenging ${categoryName} game!`,
+            `Join the fun in this popular ${categoryName} game!`,
+            `Discover the excitement of this awesome ${categoryName} experience!`
         ];
         
         return taglines[Math.floor(Math.random() * taglines.length)];
@@ -409,11 +409,11 @@ class PageGenerator {
         }
         
         if (game.mobile) {
-            tags.push('手机友好');
+            tags.push('Mobile-friendly');
         }
         
         if (game.featured) {
-            tags.push('特色');
+            tags.push('Featured');
         }
         
         // 去重并生成HTML
@@ -435,7 +435,7 @@ class PageGenerator {
      */
     generateFooterCategoryLinks() {
         return this.gameData.categories.slice(0, 6).map(category => 
-            `<li><a href="#" data-category="${category.id}">${this.escapeHtml(category.name)} 游戏</a></li>`
+            `<li><a href="#" data-category="${category.id}">${this.escapeHtml(category.name)} Games</a></li>`
         ).join('');
     }
     
@@ -464,14 +464,14 @@ class PageGenerator {
      * 生成分类描述
      */
     generateCategoryDescription(category) {
-        return `${category.description} 探索我们收集的 ${category.game_count} 个精彩的${category.name.toLowerCase()}游戏，全部免费在线玩！从休闲到挑战性，为您的技能水平找到完美的${category.name.toLowerCase()}游戏。`;
+        return `${category.description} Explore our collection of ${category.game_count} awesome ${category.name.toLowerCase()} games — all free to play online! From casual to challenging, find the perfect ${category.name.toLowerCase()} game for your skill level.`;
     }
     
     /**
      * 生成分类FAQ
      */
     generateCategoryFAQ(category) {
-        return `${category.name}游戏是${category.description.toLowerCase()}这些游戏通常具有${this.getCategoryFeatures(category.name)}，非常适合喜欢${this.getCategoryAudience(category.name)}的玩家。`;
+        return `${category.name} games are ${category.description.toLowerCase()}. They typically feature ${this.getCategoryFeatures(category.name)} and are great for players who enjoy ${this.getCategoryAudience(category.name)}.`;
     }
     
     /**
@@ -479,17 +479,17 @@ class PageGenerator {
      */
     getCategoryFeatures(categoryName) {
         const features = {
-            'Action': '快节奏的游戏玩法、战斗机制和快速反应',
-            'Racing': '高速车辆、竞争性赛车和精准驾驶',
-            'Puzzle': '头脑风暴挑战、逻辑思维和解决问题',
-            'Sports': '体育竞争、团队合作和体育模拟',
-            'Adventure': '探索、故事讲述和沉浸式世界',
-            'Arcade': '经典游戏玩法、简单控制和令人上瘾的机制',
-            'Shooting': '目标练习、战斗场景和武器多样性',
-            'Simulation': '真实场景、管理元素和生活模拟'
+            'Action': 'fast-paced gameplay, combat mechanics, and quick reflexes',
+            'Racing': 'high-speed vehicles, competitive races, and precise driving',
+            'Puzzle': 'brain-teasing challenges, logic, and problem solving',
+            'Sports': 'sports competition, teamwork, and simulations',
+            'Adventure': 'exploration, storytelling, and immersive worlds',
+            'Arcade': 'classic gameplay, simple controls, and addictive loops',
+            'Shooting': 'aim training, combat scenarios, and weapon variety',
+            'Simulation': 'realistic scenarios, management elements, and life sims'
         };
         
-        return features[categoryName] || '引人入胜的游戏玩法和娱乐';
+        return features[categoryName] || 'engaging gameplay and entertainment';
     }
     
     /**
@@ -497,17 +497,17 @@ class PageGenerator {
      */
     getCategoryAudience(categoryName) {
         const audiences = {
-            'Action': '刺激和肾上腺素飙升的体验',
-            'Racing': '速度和竞争性驾驶挑战',
-            'Puzzle': '心理挑战和大脑训练',
-            'Sports': '体育竞争和体育娱乐',
-            'Adventure': '探索和沉浸式故事讲述',
-            'Arcade': '经典游戏和怀旧体验',
-            'Shooting': '精准挑战和战斗场景',
-            'Simulation': '真实体验和管理游戏玩法'
+            'Action': 'thrilling, adrenaline-pumping experiences',
+            'Racing': 'speed and competitive driving challenges',
+            'Puzzle': 'mental challenges and brain training',
+            'Sports': 'sports competition and entertainment',
+            'Adventure': 'exploration and immersive storytelling',
+            'Arcade': 'classic games and nostalgic experiences',
+            'Shooting': 'precision challenges and combat scenarios',
+            'Simulation': 'realistic experiences and management gameplay'
         };
         
-        return audiences[categoryName] || '有趣和引人入胜的游戏玩法';
+        return audiences[categoryName] || 'fun and engaging gameplay';
     }
     
     /**

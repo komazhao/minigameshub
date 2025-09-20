@@ -28,7 +28,7 @@ class MiniGamesHubApp {
      * 初始化应用程序
      */
     async init() {
-        console.log('MiniGamesHubApp 初始化开始...');
+        console.log('MiniGamesHubApp initializing...');
 
         this.initializeElements();
         this.setupEventListeners();
@@ -37,37 +37,37 @@ class MiniGamesHubApp {
         // 等待游戏数据加载
         if (window.gameDataManager) {
             if (window.gameDataManager.loaded) {
-                console.log('游戏数据已经加载完成');
+                console.log('Game data already loaded');
                 this.onDataLoaded();
             } else {
-                console.log('等待游戏数据加载...');
+                console.log('Waiting for game data to load...');
 
                 // 设置超时机制
                 const timeout = setTimeout(() => {
-                    console.log('数据加载超时，强制使用默认数据...');
+                    console.log('Data load timeout, forcing default data...');
                     if (window.gameDataManager && !window.gameDataManager.loaded) {
-                        console.log('强制触发默认数据加载...');
+                        console.log('Forcing default data load...');
                         if (typeof window.gameDataManager.useDefaultData === 'function') {
                             window.gameDataManager.useDefaultData();
                         }
                     }
-                }, 8000); // 8秒超时
+                }, 8000); // 8s timeout
 
                 window.gameDataManager.on('loaded', () => {
                     clearTimeout(timeout);
-                    console.log('游戏数据加载完成事件触发');
+                    console.log('Game data loaded event received');
                     this.onDataLoaded();
                 });
 
                 window.gameDataManager.on('error', (error) => {
                     clearTimeout(timeout);
-                    console.log('游戏数据加载错误事件触发:', error);
+                    console.log('Game data error event:', error);
                     this.onDataLoadError(error);
                 });
             }
         } else {
-            console.log('gameDataManager 未准备好，重试...');
-            setTimeout(() => this.init(), 100); // 如果 gameDataManager 未准备好则重试
+            console.log('gameDataManager not ready, retrying...');
+            setTimeout(() => this.init(), 100); // Retry if not ready
         }
     }
     
@@ -230,9 +230,9 @@ class MiniGamesHubApp {
             this.updateSiteStats();
             this.updateFavoritesCount();
 
-            console.log('MiniGamesHub 应用程序初始化完成');
+            console.log('MiniGamesHub app initialized');
         } catch (error) {
-            console.warn('onDataLoaded 执行出错（可能因为DOM元素不存在）:', error);
+            console.warn('onDataLoaded error (possibly missing DOM elements):', error);
         }
     }
     
@@ -240,9 +240,9 @@ class MiniGamesHubApp {
      * 数据加载错误处理
      */
     onDataLoadError(error) {
-        console.error('数据加载错误:', error);
+        console.error('Data load error:', error);
         this.hideLoadingScreen();
-        this.showErrorMessage('游戏数据加载失败，请刷新页面重试');
+        this.showErrorMessage('Game data failed to load. Please refresh and try again');
     }
     
     /**
@@ -275,9 +275,9 @@ class MiniGamesHubApp {
         errorDiv.className = 'error-message';
         errorDiv.innerHTML = `
             <div class="error-content">
-                <h2>加载错误</h2>
+                <h2>Load Error</h2>
                 <p>${message}</p>
-                <button onclick="location.reload()" class="retry-btn">重试</button>
+                <button onclick="location.reload()" class="retry-btn">Retry</button>
             </div>
         `;
         
@@ -320,7 +320,7 @@ class MiniGamesHubApp {
             `).join('');
 
             this.elements.categoriesFilter.innerHTML = `
-                <button class="category-btn active" data-category="all">所有游戏</button>
+                <button class="category-btn active" data-category="all">All Games</button>
                 ${categoryButtons}
             `;
         }
@@ -340,7 +340,7 @@ class MiniGamesHubApp {
                     <h3>${category.name}</h3>
                     <p>${category.description || ''}</p>
                     <div class="category-stats">
-                        <span>${category.game_count || 0} 游戏</span>
+                        <span>${category.game_count || 0} games</span>
                     </div>
                 </a>
             `).join('');
@@ -385,9 +385,9 @@ class MiniGamesHubApp {
                          alt="${game.name}" 
                          loading="lazy">
                     <div class="game-overlay">
-                        <button class="play-btn">▶ 开始游戏</button>
+                        <button class="play-btn">▶ Play</button>
                     </div>
-                    ${game.featured ? '<div class="featured-badge">特色</div>' : ''}
+                    ${game.featured ? '<div class="featured-badge">Featured</div>' : ''}
                 </div>
                 <div class="game-info">
                     <h3 class="game-title">${game.name}</h3>
@@ -396,12 +396,12 @@ class MiniGamesHubApp {
                             ${this.createStarRating(game.rating || 0)}
                         </div>
                         <div class="game-stats">
-                            <span class="plays">${this.formatNumber(game.plays || 0)} 次播放</span>
+                            <span class="plays">${this.formatNumber(game.plays || 0)} plays</span>
                         </div>
                     </div>
                     <button class="favorite-btn ${isFavorite ? 'active' : ''}" 
                             data-game-id="${game.game_id}"
-                            title="${isFavorite ? '取消收藏' : '添加到收藏'}">
+                            title="${isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
                         ♥
                     </button>
                 </div>
@@ -520,7 +520,7 @@ class MiniGamesHubApp {
                 animation: spin 1s linear infinite;
                 margin: 0 auto 20px;
             "></div>
-            <div style="color: white; font-size: 16px;">加载游戏中...</div>
+            <div style="color: white; font-size: 16px;">Loading game...</div>
         `;
 
         container.appendChild(loader);
@@ -612,8 +612,8 @@ class MiniGamesHubApp {
         } else if (this.loadedGames === 0) {
             this.elements.gamesGrid.innerHTML = `
                 <div class="no-games-message">
-                    <h3>未找到游戏</h3>
-                    <p>试试调整搜索条件或选择其他分类</p>
+                    <h3>No games found</h3>
+                    <p>Try adjusting your search or choose another category</p>
                 </div>
             `;
         }
@@ -724,8 +724,8 @@ class MiniGamesHubApp {
         
         // 更新页面标题
         if (this.elements.gamesSectionTitle) {
-            const categoryName = category === 'all' ? '所有游戏' : 
-                window.gameDataManager.getCategoryById(parseInt(category))?.name || '游戏';
+            const categoryName = category === 'all' ? 'All Games' : 
+                window.gameDataManager.getCategoryById(parseInt(category))?.name || 'Games';
             this.elements.gamesSectionTitle.textContent = categoryName;
         }
         
@@ -862,8 +862,8 @@ class MiniGamesHubApp {
      * 切换收藏页面显示
      */
     toggleFavorites() {
-        // 实现收藏页面显示逻辑
-        console.log('切换收藏页面显示');
+        // Implement favorites panel toggle
+        console.log('Toggling favorites view');
     }
     
     /**
@@ -879,7 +879,7 @@ class MiniGamesHubApp {
             if (favoriteBtn) {
                 const isFavorite = window.gameManager.isFavorite(gameId);
                 favoriteBtn.classList.toggle('active', isFavorite);
-                favoriteBtn.title = isFavorite ? '取消收藏' : '添加到收藏';
+                favoriteBtn.title = isFavorite ? 'Remove from favorites' : 'Add to favorites';
             }
         }
     }
@@ -907,20 +907,20 @@ class MiniGamesHubApp {
 
         if (!window.gameDataManager) {
             console.error('gameDataManager not found');
-            this.showErrorMessage('游戏系统未初始化，请刷新页面重试...');
+            this.showErrorMessage('Game system not initialized. Please refresh and try again...');
             return;
         }
 
         if (!window.gameDataManager.loaded) {
             console.error('Game data not loaded yet');
-            this.showErrorMessage('游戏数据正在加载，请稍后再试...');
+            this.showErrorMessage('Game data is loading. Please try again shortly...');
             return;
         }
 
         const game = window.gameDataManager.getGameById(gameId);
         if (!game) {
             console.error('Game not found:', gameId);
-            this.showErrorMessage('未找到该游戏，请刷新页面重试...');
+            this.showErrorMessage('Game not found. Please refresh and try again...');
             return;
         }
 
@@ -937,13 +937,13 @@ class MiniGamesHubApp {
 
         if (!gameModal) {
             console.error('Game modal element not found');
-            this.showErrorMessage('游戏界面加载失败，请刷新页面重试...');
+            this.showErrorMessage('Game UI failed to load. Please refresh and try again...');
             return;
         }
 
         if (!gameIframe) {
             console.error('Game iframe element not found');
-            this.showErrorMessage('游戏容器加载失败，请刷新页面重试...');
+            this.showErrorMessage('Game container failed to load. Please refresh and try again...');
             return;
         }
 
@@ -954,12 +954,12 @@ class MiniGamesHubApp {
 
         // 设置游戏描述
         if (modalDescription) {
-            modalDescription.textContent = game.description || game.game_description || '一款有趣的在线游戏，快来体验吧！';
+            modalDescription.textContent = game.description || game.game_description || 'A fun online game — give it a try!';
         }
 
         // 设置游戏操作说明
         if (modalInstructions) {
-            modalInstructions.textContent = game.instructions || game.game_instructions || '使用鼠标或键盘控制游戏。具体操作请参考游戏内的说明。';
+            modalInstructions.textContent = game.instructions || game.game_instructions || 'Use your mouse or keyboard to play. See in-game instructions for details.';
         }
 
         // 设置游戏统计信息
@@ -976,7 +976,7 @@ class MiniGamesHubApp {
 
         if (!game.file || game.file.trim() === '') {
             console.error('Game has no URL');
-            this.showErrorMessage('抱歉，该游戏暂时无法使用');
+            this.showErrorMessage('Sorry, this game is temporarily unavailable');
             return;
         }
 
@@ -990,9 +990,9 @@ class MiniGamesHubApp {
         const loadTimeout = setTimeout(() => {
             console.error('Game loading timeout');
             this.hideLoadingIndicator(gameIframe);
-            this.showErrorMessage('游戏加载超时，请检查网络连接后重试');
+            this.showErrorMessage('Game load timed out. Please check your network and try again');
             gameIframe.src = '';
-        }, 30000); // 30秒超时
+        }, 30000); // 30s timeout
 
         gameIframe.onload = () => {
             clearTimeout(loadTimeout);
@@ -1004,7 +1004,7 @@ class MiniGamesHubApp {
             clearTimeout(loadTimeout);
             console.error('Game iframe failed to load');
             this.hideLoadingIndicator(gameIframe);
-            this.showErrorMessage('游戏加载失败，该游戏可能暂时不可用');
+            this.showErrorMessage('Game failed to load. It may be temporarily unavailable');
             setTimeout(() => this.closeGameModal(), 3000);
         };
 
@@ -1012,7 +1012,7 @@ class MiniGamesHubApp {
         gameModal.classList.add('active');
         document.body.style.overflow = 'hidden';
 
-        console.log('✅ 游戏模态框打开成功');
+        console.log('✅ Game modal opened successfully');
 
         // 更新游戏播放统计
         if (window.gameManager) {
@@ -1060,30 +1060,30 @@ window.app = window.miniGamesHubApp;
 
 // 添加全局游戏卡片点击处理器作为备用方案
 window.handleGameCardClick = function(event) {
-    console.log('全局点击处理器被调用:', event.target);
+    console.log('Global click handler called:', event.target);
 
     const gameCard = event.target.closest('.game-card');
     if (gameCard) {
-        console.log('找到游戏卡片:', gameCard);
+        console.log('Found game card:', gameCard);
         const gameId = gameCard.dataset.gameId;
-        console.log('游戏ID:', gameId);
+        console.log('Game ID:', gameId);
 
         if (gameId) {
-            console.log('尝试打开游戏模态框...');
+            console.log('Trying to open game modal...');
 
             // 尝试使用 miniGamesHubApp 实例
             if (window.miniGamesHubApp && typeof window.miniGamesHubApp.openGameModal === 'function') {
                 try {
                     window.miniGamesHubApp.openGameModal(parseInt(gameId));
-                    console.log('✅ 游戏模态框打开成功');
+                    console.log('✅ Game modal opened successfully');
                 } catch (error) {
-                    console.error('❌ openGameModal 调用失败:', error);
+                    console.error('❌ openGameModal call failed:', error);
                 }
             } else {
-                console.error('❌ miniGamesHubApp 或 openGameModal 不存在');
+                console.error('❌ miniGamesHubApp or openGameModal not found');
             }
         } else {
-            console.error('❌ 游戏卡片没有 game-id');
+            console.error('❌ Game card missing game-id');
         }
 
         // 阻止事件冒泡
@@ -1092,10 +1092,10 @@ window.handleGameCardClick = function(event) {
     }
 };
 
-// 添加额外的事件监听器确保点击能被捕获
-document.addEventListener('click', window.handleGameCardClick, true); // 使用捕获阶段
+// Extra listener to ensure clicks are captured
+document.addEventListener('click', window.handleGameCardClick, true); // capture phase
 
-// 添加调试信息
+// Debug info
 console.log('MiniGamesHub App initialized:', window.miniGamesHubApp);
 console.log('Waiting for game data to load...');
 console.log('Global game card click handler added');

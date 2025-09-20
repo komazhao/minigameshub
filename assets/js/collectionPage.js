@@ -108,9 +108,9 @@ class CollectionPage {
 
         if (window.gameDataManager) {
             window.gameDataManager.on('loaded', () => this.onGameDataReady());
-            window.gameDataManager.on('error', () => this.showError('游戏数据加载失败，请稍后刷新重试。'));
+            window.gameDataManager.on('error', () => this.showError('Failed to load game data. Please refresh and try again.'));
         } else {
-            this.showError('游戏系统初始化失败，请刷新页面重试。');
+            this.showError('Game system initialization failed. Please refresh and try again.');
         }
     }
 
@@ -146,7 +146,7 @@ class CollectionPage {
         if (this.mode === 'category') {
             const category = window.gameDataManager.getCategoryBySlug(this.categorySlug);
             if (!category) {
-                this.showError('未找到对应的游戏分类。');
+                this.showError('Category not found.');
                 return;
             }
             this.currentCategory = category;
@@ -241,7 +241,7 @@ class CollectionPage {
         this.visibleGames += nextGames.length;
 
         if (this.elements.collectionCount) {
-            this.elements.collectionCount.textContent = `共 ${this.sortedGames.length} 款游戏`;
+            this.elements.collectionCount.textContent = `${this.sortedGames.length} games`;
         }
 
         if (this.elements.loadMoreBtn) {
@@ -271,8 +271,8 @@ class CollectionPage {
             <div class="game-card" data-game-id="${game.game_id}">
                 <div class="game-image">
                     <img src="${image}" alt="${game.name}">
-                    ${isFeatured ? '<span class="game-badge">精选</span>' : ''}
-                    <button class="game-favorite favorite-btn ${isFavorite ? 'active' : ''}" data-game-id="${game.game_id}" aria-label="收藏游戏">
+                    ${isFeatured ? '<span class="game-badge">Featured</span>' : ''}
+                    <button class="game-favorite favorite-btn ${isFavorite ? 'active' : ''}" data-game-id="${game.game_id}" aria-label="Add to favorites">
                         ♥
                     </button>
                 </div>
@@ -299,17 +299,17 @@ class CollectionPage {
             featured: {
                 title: 'Featured HTML5 Games',
                 description: 'Our hand-picked selection of the best mini games to play right now. Updated continuously with new favorites.',
-                subtitle: '精选推荐'
+                subtitle: 'Featured Picks'
             },
             popular: {
                 title: 'Most Popular Games',
                 description: 'Trending games that players love the most. Jump into the hits that are getting thousands of plays.',
-                subtitle: '热门排行榜'
+                subtitle: 'Trending Now'
             },
             new: {
                 title: 'Newly Added Games',
                 description: 'Fresh HTML5 games added to MiniGamesHub. Be the first to try the latest adventures.',
-                subtitle: '最新上线'
+                subtitle: 'New Arrivals'
             }
         };
 
@@ -324,7 +324,7 @@ class CollectionPage {
         const title = `${category.name} Games`;
         const description = category.description || `Play the best ${category.name.toLowerCase()} games online for free.`;
 
-        this.updateTextContent(title, description, `${category.name} 精选`);
+        this.updateTextContent(title, description, `${category.name} Highlights`);
         this.updateMetaTags(title, description);
         this.updateBreadcrumb(category.name);
     }
@@ -340,7 +340,7 @@ class CollectionPage {
             this.elements.collectionSubtitle.textContent = subtitle || 'Browse Collection';
         }
         if (this.elements.collectionCount) {
-            this.elements.collectionCount.textContent = `共 ${this.allGames.length} 款游戏`;
+            this.elements.collectionCount.textContent = `${this.allGames.length} games`;
         }
         this.currentTitle = title;
         this.currentDescription = description;
@@ -446,7 +446,7 @@ class CollectionPage {
             this.elements.loadMoreBtn.style.display = 'none';
         }
         if (this.elements.collectionCount) {
-            this.elements.collectionCount.textContent = '共 0 款游戏';
+            this.elements.collectionCount.textContent = '0 games';
         }
 
         this.updateStructuredData();

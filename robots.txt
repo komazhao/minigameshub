@@ -13,13 +13,13 @@ Allow: /assets/js/
 Allow: /assets/images/
 Allow: /data/
 
-# Disallow admin和临时目录
+# Disallow admin and temporary directories
 Disallow: /admin/
 Disallow: /private/
 Disallow: /temp/
 Disallow: /generated-pages/
 
-# 限制常见追踪参数，避免重复内容
+# Disallow common tracking params to avoid duplicate content
 Disallow: /*?utm_*
 Disallow: /*?gclid*
 Disallow: /*?fbclid*
@@ -66,4 +66,3 @@ Sitemap: https://minigameshub.co/sitemap-images.xml
 
 # Host directive
 Host: minigameshub.co
-
