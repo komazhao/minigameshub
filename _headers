@@ -107,3 +107,7 @@
   X-Robots-Tag: noindex, nofollow, noarchive
 /cleanup.sql
   X-Robots-Tag: noindex, nofollow, noarchive
+# ads.txt（广告验证）
+/ads.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=3600
