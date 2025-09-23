@@ -3,9 +3,9 @@
  * Provides caching, offline support, and performance optimization
  */
 
-const CACHE_NAME = 'minigameshub-v20250923-08';
-const GAME_CACHE_NAME = 'minigameshub-games-v20250923-08';
-const API_CACHE_NAME = 'minigameshub-api-v20250923-08';
+const CACHE_NAME = 'minigameshub-v202509231504';
+const GAME_CACHE_NAME = 'minigameshub-games-v202509231504';
+const API_CACHE_NAME = 'minigameshub-api-v202509231504';
 
 // Assets to cache on install
 const STATIC_ASSETS = [

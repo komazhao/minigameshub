@@ -9,7 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="/assets/images/favicon.svg">
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#007AFF">
-  <link rel="stylesheet" href="/assets/css/main.css?v=20250923-08">
+  <link rel="stylesheet" href="/assets/css/main.css?v=202509231504">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8059207534738960" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -33,6 +33,10 @@
       <div class="nav-menu" id="nav-menu">
         <ul class="nav-list">
           <li><a href="/" class="nav-link">Home</a></li>
+          <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle">Categories</a>
+            <ul class="dropdown-menu" id="categories-dropdown"></ul>
+          </li>
           <li><a href="/collections/featured" class="nav-link" data-local-href="/collection.html?collection=featured">Featured</a></li>
           <li><a href="/collections/new" class="nav-link" data-local-href="/collection.html?collection=new">New Games</a></li>
           <li><a href="/collections/popular" class="nav-link" data-local-href="/collection.html?collection=popular">Popular</a></li>
@@ -130,8 +134,31 @@
       if (toggle && menu) toggle.addEventListener('click', ()=> menu.classList.toggle('active'));
     })();
   </script>
-  <script src="/assets/js/navRouter.js?v=20250923-08"></script>
-  <script src="/assets/js/swRegister.js?v=20250923-08"></script>
+  <script src="/config.js?v=202509231504"></script>
+  <script src="/assets/js/localFallback.js?v=202509231504"></script>
+  <script src="/assets/js/gameData.js?v=202509231504"></script>
+  <script>
+    (function(){
+      function fillCategories(){
+        try {
+          const cats = (window.gameDataManager && window.gameDataManager.getAllCategories) ? window.gameDataManager.getAllCategories() : [];
+          const dropdown = document.getElementById('categories-dropdown');
+          if (dropdown && cats.length) {
+            dropdown.innerHTML = cats.map(c => `<li><a href=\"/collections/category/${c.slug}\" class=\"dropdown-link\" data-category=\"${c.id}\" data-local-href=\"/collection.html?category=${c.slug}\">${c.name}</a></li>`).join('');
+          }
+          const footerCats = document.getElementById('footer-categories');
+          if (footerCats && cats.length) {
+            footerCats.innerHTML = cats.map(c => `<li><a href=\"/collections/category/${c.slug}\" data-local-href=\"/collection.html?category=${c.slug}\">${c.name}</a></li>`).join('');
+          }
+        } catch(e) {}
+      }
+      if (window.gameDataManager && window.gameDataManager.loaded) fillCategories();
+      else if (window.gameDataManager && window.gameDataManager.on) window.gameDataManager.on('loaded', fillCategories);
+      else setTimeout(fillCategories, 500);
+    })();
+  </script>
+  <script src="/assets/js/navRouter.js?v=202509231504"></script>
+  <script src="/assets/js/swRegister.js?v=202509231504"></script>
 </body>
 <!-- No analytics here to keep the page light -->
 </html>

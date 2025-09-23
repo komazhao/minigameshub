@@ -1,6 +1,16 @@
 // Normalize navigation for collections routes to ensure correct landing pages
 // Works regardless of server redirect rules.
 (function() {
+  try {
+    // Normalize /search route to index with query so the main page can handle filtering
+    const pathNow = (window.location && window.location.pathname || '').replace(/\/+$/, '');
+    if (pathNow === '/search') {
+      const qs = window.location.search || '';
+      window.location.replace(`/index.html${qs}`);
+      return;
+    }
+  } catch (e) { /* no-op */ }
+
   function onClick(e) {
     const a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
     if (!a) return;
@@ -33,4 +43,3 @@
 
   document.addEventListener('click', onClick, true);
 })();
-
