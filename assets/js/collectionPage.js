@@ -119,6 +119,7 @@ class CollectionPage {
         this.populateNavigation();
         this.updateFavoritesBadge();
         this.preparePageContent();
+        this.populatePopularCategoriesGrid();
     }
 
     populateNavigation() {
@@ -270,7 +271,7 @@ class CollectionPage {
         return `
             <div class="game-card" data-game-id="${game.game_id}">
                 <div class="game-image">
-                    <img src="${image}" alt="${game.name}">
+                    <img src="${image}" alt="${game.name}" width="512" height="384">
                     ${isFeatured ? '<span class="game-badge">Featured</span>' : ''}
                     <button class="game-favorite favorite-btn ${isFavorite ? 'active' : ''}" data-game-id="${game.game_id}" aria-label="Add to favorites">
                         ♥
@@ -298,17 +299,17 @@ class CollectionPage {
         const configMap = {
             featured: {
                 title: 'Featured HTML5 Games',
-                description: 'Our hand-picked selection of the best mini games to play right now. Updated continuously with new favorites.',
+                description: 'Discover our hand-picked selection of the best mini games to play right now. Explore top picks from <a href="/collections/category/action">Action</a>, <a href="/collections/category/puzzle">Puzzle</a>, <a href="/collections/category/racing">Racing</a>, and more — all free and playable instantly.',
                 subtitle: 'Featured Picks'
             },
             popular: {
                 title: 'Most Popular Games',
-                description: 'Trending games that players love the most. Jump into the hits that are getting thousands of plays.',
+                description: 'Trending games that players love the most. Jump into the hits getting thousands of plays across <a href="/collections/category/sports">Sports</a>, <a href="/collections/category/arcade">Arcade</a>, and <a href="/collections/category/shooting">Shooting</a> games.',
                 subtitle: 'Trending Now'
             },
             new: {
                 title: 'Newly Added Games',
-                description: 'Fresh HTML5 games added to MiniGamesHub. Be the first to try the latest adventures.',
+                description: 'Fresh HTML5 games added to MiniGamesHub. Be the first to try the latest adventures in <a href="/collections/category/adventure">Adventure</a> and <a href="/collections/category/simulation">Simulation</a>, plus brand-new releases across all categories.',
                 subtitle: 'New Arrivals'
             }
         };
@@ -334,7 +335,7 @@ class CollectionPage {
             this.elements.collectionTitle.textContent = title;
         }
         if (this.elements.collectionDescription) {
-            this.elements.collectionDescription.textContent = description;
+            this.elements.collectionDescription.innerHTML = description;
         }
         if (this.elements.collectionSubtitle) {
             this.elements.collectionSubtitle.textContent = subtitle || 'Browse Collection';
@@ -343,7 +344,7 @@ class CollectionPage {
             this.elements.collectionCount.textContent = `${this.allGames.length} games`;
         }
         this.currentTitle = title;
-        this.currentDescription = description;
+        this.currentDescription = this.stripHtml(description);
         document.title = `${title} | MiniGamesHub.co`;
     }
 
@@ -590,6 +591,26 @@ class CollectionPage {
         };
 
         structuredEl.textContent = JSON.stringify([pageSchema, breadcrumbSchema]);
+    }
+
+    stripHtml(html) {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html || '';
+        return tmp.textContent || tmp.innerText || '';
+    }
+
+    populatePopularCategoriesGrid() {
+        const grid = document.getElementById('collection-categories-grid');
+        if (!grid || !window.gameDataManager) return;
+        const categories = window.gameDataManager.getAllCategories();
+        grid.innerHTML = categories.map(category => `
+            <a class="category-card" href="/collections/category/${category.slug}" data-local-href="/collection.html?category=${category.slug}">
+                <div class="category-icon">🎮</div>
+                <h3>${category.name}</h3>
+                <p>${category.description || ''}</p>
+                <div class="category-stats"><span>${category.game_count || 0} games</span></div>
+            </a>
+        `).join('');
     }
 }
 

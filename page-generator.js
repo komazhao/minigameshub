@@ -222,9 +222,11 @@ class PageGenerator {
             '{{RELATED_CATEGORIES_HTML}}': this.generateCategoriesGridHTML(relatedCategories),
             '{{CATEGORY_NAVIGATION_LINKS}}': this.generateCategoryNavigationLinks(),
             '{{FOOTER_CATEGORY_LINKS}}': this.generateFooterCategoryLinks(),
-            '{{GAMES_STRUCTURED_DATA}}': this.generateGamesStructuredData(categoryGames.slice(0, 10)),
+            '{{GAMES_STRUCTURED_DATA}}': this.generateGamesStructuredData(categoryGames.slice(0, 12)),
+            '{{STRUCTURED_COUNT}}': Math.min(12, categoryGames.length),
             '{{FAQ_DISPLAY}}': 'display: block;',
-            '{{FAQ_WHAT_ARE}}': this.generateCategoryFAQ(category)
+            '{{FAQ_WHAT_ARE}}': this.generateCategoryFAQ(category),
+            '{{FAQ_JSONLD}}': this.generateCategoryFaqJsonLd(category)
         };
         
         return this.replaceTemplate(this.templates.category, replacements);
@@ -289,7 +291,7 @@ class PageGenerator {
             return `
                 <div class="game-card" data-game-id="${game.game_id}">
                     <div class="game-image">
-                        <img src="${game.image}" alt="${this.escapeHtml(game.name)}" loading="lazy">
+                        <img src="${game.image}" alt="${this.escapeHtml(game.name)}" loading="lazy" width="512" height="384">
                         ${game.featured ? '<div class="game-badge">Featured</div>' : ''}
                         <button class="game-favorite" data-game-id="${game.game_id}">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -318,14 +320,12 @@ class PageGenerator {
      */
     generateCategoriesGridHTML(categories) {
         return categories.map(category => `
-            <div class="category-card" data-category="${category.id}">
-                <div class="category-icon">
-                    ${this.getCategoryIcon(category.name)}
-                </div>
+            <a class="category-card" data-category="${category.id}" href="/collections/category/${category.slug}" data-local-href="/collection.html?category=${category.slug}">
+                <div class="category-icon">${this.getCategoryIcon(category.name)}</div>
                 <h3 class="category-name">${this.escapeHtml(category.name)}</h3>
                 <p class="category-description">${this.escapeHtml(category.description)}</p>
                 <span class="category-count">${category.game_count} games</span>
-            </div>
+            </a>
         `).join('');
     }
     
@@ -435,7 +435,7 @@ class PageGenerator {
      */
     generateFooterCategoryLinks() {
         return this.gameData.categories.slice(0, 6).map(category => 
-            `<li><a href="#" data-category="${category.id}">${this.escapeHtml(category.name)} Games</a></li>`
+            `<li><a href="/collections/category/${category.slug}" data-category="${category.id}" data-local-href="/collection.html?category=${category.slug}">${this.escapeHtml(category.name)} Games</a></li>`
         ).join('');
     }
     
@@ -509,6 +509,44 @@ class PageGenerator {
         
         return audiences[categoryName] || 'fun and engaging gameplay';
     }
+
+    /**
+     * 生成分类 FAQ 的 JSON-LD
+     */
+    generateCategoryFaqJsonLd(category) {
+        const qas = [
+            {
+                q: `What are ${category.name} games?`,
+                a: this.generateCategoryFAQ(category)
+            },
+            {
+                q: `Are these ${category.name} games free to play?`,
+                a: `Yes! All ${category.name.toLowerCase()} games on MiniGamesHub are completely free to play. You don't need to download anything or sign up — just click and play instantly in your web browser.`
+            },
+            {
+                q: `Can I play ${category.name} games on mobile?`,
+                a: `Many of our ${category.name.toLowerCase()} games are mobile-friendly and work great on smartphones and tablets. Look for the mobile-friendly badge on each game.`
+            },
+            {
+                q: `How often do you add new ${category.name} games?`,
+                a: `We regularly add new ${category.name.toLowerCase()} games to keep our collection fresh and exciting. Check back often to discover the latest additions!`
+            }
+        ];
+
+        const json = {
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: qas.map(({ q, a }) => ({
+                '@type': 'Question',
+                name: q,
+                acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: a
+                }
+            }))
+        };
+        return JSON.stringify(json);
+    }
     
     /**
      * 格式化描述为HTML
@@ -550,7 +588,7 @@ class PageGenerator {
         // 分类页面
         for (const category of this.gameData.categories) {
             urls.push({
-                loc: `https://minigameshub.co/categories/${category.slug}`,
+                loc: `https://minigameshub.co/collections/category/${category.slug}`,
                 priority: '0.7',
                 changefreq: 'weekly'
             });

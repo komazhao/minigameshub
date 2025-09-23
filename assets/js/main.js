@@ -401,7 +401,7 @@ class MiniGamesHubApp {
                 <div class="game-image">
                     <img src="${game.image || '/assets/images/game-placeholder.png'}" 
                          alt="${game.name}" 
-                         loading="lazy">
+                         loading="lazy" width="512" height="384">
                     <div class="game-overlay">
                         <button class="play-btn">▶ Play</button>
                     </div>
@@ -844,7 +844,7 @@ class MiniGamesHubApp {
         if (this.elements.searchSuggestions && suggestions.length > 0) {
             this.elements.searchSuggestions.innerHTML = suggestions.map(game => `
                 <div class="suggestion-item" data-game-id="${game.game_id}">
-                    <img src="${game.image}" alt="${game.name}" class="suggestion-image">
+                    <img src="${game.image}" alt="${game.name}" class="suggestion-image" width="64" height="48">
                     <div class="suggestion-info">
                         <div class="suggestion-name">${game.name}</div>
                         <div class="suggestion-category">${window.gameDataManager.getCategoryName(game.category)}</div>
