@@ -79,6 +79,7 @@ class MiniGamesHubApp {
             loadingScreen: document.getElementById('loading-screen'),
             searchContainer: document.getElementById('search-container'),
             searchInput: document.getElementById('search-input'),
+            searchButton: document.getElementById('search-btn'),
             searchToggle: document.getElementById('search-toggle'),
             searchSuggestions: document.getElementById('search-suggestions'),
             categoriesDropdown: document.getElementById('categories-dropdown'),
@@ -118,6 +119,17 @@ class MiniGamesHubApp {
             this.elements.searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
             this.elements.searchInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') this.closeSearch();
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.performSearch();
+                }
+            });
+        }
+
+        if (this.elements.searchButton) {
+            this.elements.searchButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.performSearch();
             });
         }
         
@@ -225,6 +237,16 @@ class MiniGamesHubApp {
         try {
             this.hideLoadingScreen();
             this.populateCategories();
+            // 若存在 URL 查询参数 q，预填充搜索并应用过滤
+            try {
+                const params = new URLSearchParams(window.location.search || '');
+                const q = (params.get('q') || '').trim();
+                if (q && this.elements.searchInput) {
+                    this.openSearch();
+                    this.elements.searchInput.value = q;
+                    this.searchQuery = q;
+                }
+            } catch {}
             this.populateFeaturedGames();
             this.populateGames();
             this.updateSiteStats();
@@ -598,11 +620,13 @@ class MiniGamesHubApp {
         let games;
 
         if (this.searchQuery) {
-            games = window.gameDataManager.searchGames(this.searchQuery, {
+            const allMatches = window.gameDataManager.searchGames(this.searchQuery, {
                 category: this.currentCategory === 'all' ? null : this.currentCategory,
-                sortBy: this.currentSort,
-                limit: this.gamesPerPage
+                includeDescription: true,
+                limit: 999999
             });
+            const sorted = this.sortListByCurrent(allMatches);
+            games = sorted.slice(this.loadedGames, this.loadedGames + this.gamesPerPage);
         } else if (this.currentCategory === 'all') {
             games = this.getSortedGames().slice(this.loadedGames, this.loadedGames + this.gamesPerPage);
         } else {
@@ -668,12 +692,43 @@ class MiniGamesHubApp {
     getTotalAvailableGames() {
         if (this.searchQuery) {
             return window.gameDataManager.searchGames(this.searchQuery, {
-                category: this.currentCategory === 'all' ? null : this.currentCategory
+                category: this.currentCategory === 'all' ? null : this.currentCategory,
+                limit: 999999
             }).length;
         } else if (this.currentCategory === 'all') {
             return window.gameDataManager.getAllGames().length;
         } else {
             return window.gameDataManager.getGamesByCategory(parseInt(this.currentCategory)).length;
+        }
+    }
+
+    /**
+     * 将给定游戏列表按当前排序规则排序
+     */
+    sortListByCurrent(list) {
+        const arr = [...(list || [])];
+        switch (this.currentSort) {
+            case 'popular':
+                return arr.sort((a, b) => (b.plays || 0) - (a.plays || 0));
+            case 'newest':
+                return arr.sort((a, b) => {
+                    const timeA = new Date(a.date_added || 0).getTime();
+                    const timeB = new Date(b.date_added || 0).getTime();
+                    return timeB - timeA;
+                });
+            case 'rating':
+                return arr.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+            case 'name':
+                return arr.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            case 'featured':
+            default:
+                return arr.sort((a, b) => {
+                    if (a.featured && !b.featured) return -1;
+                    if (!a.featured && b.featured) return 1;
+                    const ratingDiff = (b.rating || 0) - (a.rating || 0);
+                    if (Math.abs(ratingDiff) > 0.01) return ratingDiff;
+                    return (b.plays || 0) - (a.plays || 0);
+                });
         }
     }
     
@@ -833,6 +888,24 @@ class MiniGamesHubApp {
             this.loadedGames = 0;
             this.loadMoreGames();
         }
+    }
+
+    /**
+     * 执行搜索（点击按钮或按回车）
+     */
+    performSearch() {
+        if (!this.elements || !this.elements.searchInput) return;
+        const q = (this.elements.searchInput.value || '').trim();
+        if (!q) return;
+        this.searchQuery = q;
+        try {
+            const url = new URL(window.location.href);
+            url.searchParams.set('q', q);
+            window.history.replaceState({}, '', url.toString());
+        } catch {}
+        this.loadedGames = 0;
+        this.hideSearchSuggestions();
+        this.loadMoreGames();
     }
     
     /**

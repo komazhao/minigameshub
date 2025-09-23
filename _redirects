@@ -29,7 +29,7 @@ https://www.minigameshub.co/* https://minigameshub.co/:splat 301!
 /collections/category/:slug /collection.html?category=:slug 200
 
 # 搜索页面
-/search /search.html 200
+/search /index.html 200
 /search/* /search.html 200
 
 # 用户相关页面 (可选功能)
