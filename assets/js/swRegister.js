@@ -1,6 +1,6 @@
 // Simple Service Worker registration with update prompt
 (function() {
-  const ASSET_VERSION = '202509270604';
+  const ASSET_VERSION = '202509270646';
 
   function createUpdateBanner(onRefresh) {
     const bar = document.createElement('div');

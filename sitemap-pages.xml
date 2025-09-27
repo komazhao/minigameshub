@@ -39,26 +39,26 @@
   <url>
     <loc>https://minigameshub.co/privacy-policy</loc>
     <lastmod>2025-09-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
   </url>
   <url>
     <loc>https://minigameshub.co/terms-of-service</loc>
     <lastmod>2025-09-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
   </url>
   <url>
     <loc>https://minigameshub.co/contact</loc>
     <lastmod>2025-09-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
   <url>
     <loc>https://minigameshub.co/offline.html</loc>
     <lastmod>2025-09-27</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
+    <priority>0.2</priority>
   </url>
   <url>
     <loc>https://minigameshub.co/sitemap.xml</loc>
