@@ -33,13 +33,15 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
     
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="/assets/css/main.css?v=202509270532">
+    <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- CMP must run before AdSense for consent/NPA -->
-    <script src="/assets/js/cmp.js?v=202509270532"></script>
+    <!-- Google-certified CMP loader (Funding Choices) -->
+    <script src="/assets/js/cmpLoader.js"></script>
+    <!-- CMP (fallback consent manager) -->
+    <script src="/assets/js/cmp.js"></script>
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8059207534738960" crossorigin="anonymous"></script>
 
@@ -84,7 +86,7 @@
         }
     }
     </script>
-    <script type="application/ld+json" id="category-faq-jsonld">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are Arcade games?","acceptedAnswer":{"@type":"Answer","text":"Arcade games are classic arcade and retro games. They typically feature classic gameplay, simple controls, and addictive loops and are great for players who enjoy classic games and nostalgic experiences."}},{"@type":"Question","name":"Are these Arcade games free to play?","acceptedAnswer":{"@type":"Answer","text":"Yes! All arcade games on MiniGamesHub are completely free to play. You don't need to download anything or sign up — just click and play instantly in your web browser."}},{"@type":"Question","name":"Can I play Arcade games on mobile?","acceptedAnswer":{"@type":"Answer","text":"Many of our arcade games are mobile-friendly and work great on smartphones and tablets. Look for the mobile-friendly badge on each game."}},{"@type":"Question","name":"How often do you add new Arcade games?","acceptedAnswer":{"@type":"Answer","text":"We regularly add new arcade games to keep our collection fresh and exciting. Check back often to discover the latest additions!"}}]}</script>
+    <script type="application/ld+json" id="category-faq-jsonld">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are Arcade games?","acceptedAnswer":{"@type":"Answer","text":"Arcade games are classic arcade and retro games. They typically feature classic gameplay, simple controls, and addictive loops and are great for players who enjoy classic games and nostalgic experiences."}},{"@type":"Question","name":"Are these Arcade games free to play?","acceptedAnswer":{"@type":"Answer","text":"Yes! All arcade games on MiniGamesHub are completely free to play. You don't need to download anything or sign up — just click and play instantly in your web browser."}},{"@type":"Question","name":"Can I play Arcade games on mobile?","acceptedAnswer":{"@type":"Answer","text":"Many of our arcade games are mobile-friendly and work great on smartphones and tablets. Look for the mobile-friendly badge on each game."}}]}</script>
 </head>
 <body>
     <!-- Header -->
@@ -185,7 +187,7 @@
                     </div>
                     <div class="category-info">
                         <h1 class="category-title">Arcade Games</h1>
-                        <p class="category-description">Classic arcade and retro games Explore our collection of 440 awesome arcade games — all free to play online! From casual to challenging, find the perfect arcade game for your skill level.</p>
+                        <p class="category-description">Arcade games deliver engaging, pick‑up‑and‑play fun across browsers with no downloads required. Whether you prefer quick sessions or longer challenges, this hand‑curated collection is designed to be smooth, mobile‑friendly, and easy to jump into. Explore 440 free arcade titles featuring classic gameplay, simple controls, and addictive loops and accessible controls for players of all skill levels. Start with community favorites, discover hidden gems, and bookmark the ones you love — MiniGamesHub makes it simple to find quality arcade experiences that run great on desktop and phones.</p>
                         <div class="category-stats">
                             <span class="stat">0 Games</span>
                             <span class="stat">0 Total Plays</span>
@@ -303,7 +305,7 @@
             </div>
         </section>
 
-        <!-- Category FAQ -->
+        <!-- Category FAQ (3 items; matches JSON-LD) -->
         <section class="category-faq section" style="display: block;">
             <div class="container">
                 <h2 class="section-title">Frequently Asked Questions</h2>
@@ -321,11 +323,6 @@
                     <div class="faq-item">
                         <h3>Can I play Arcade games on mobile?</h3>
                         <p>Many of our Arcade games are mobile-friendly and work great on smartphones and tablets. Look for the mobile-friendly badge on each game.</p>
-                    </div>
-                    
-                    <div class="faq-item">
-                        <h3>How often do you add new Arcade games?</h3>
-                        <p>We regularly add new Arcade games to keep our collection fresh and exciting. Check back often to discover the latest additions!</p>
                     </div>
                 </div>
             </div>
@@ -554,9 +551,9 @@
         });
     </script>
     
-    <script src="/assets/js/localFallback.js?v=202509270532"></script>
-    <script src="/assets/js/gameData.js?v=202509270532"></script>
-    <script src="/assets/js/gameManager.js?v=202509270532"></script>
+    <script src="/assets/js/localFallback.js"></script>
+    <script src="/assets/js/gameData.js"></script>
+    <script src="/assets/js/gameManager.js"></script>
     
     <!-- Google Analytics -->
     <!-- Google tag (gtag.js) -->
@@ -575,7 +572,7 @@
         'category': 'Arcade'
       });
     </script>
-    <script src="/assets/js/navRouter.js?v=202509270532"></script>
-    <script src="/assets/js/swRegister.js?v=202509270532"></script>
+    <script src="/assets/js/navRouter.js"></script>
+    <script src="/assets/js/swRegister.js"></script>
 </body>
 </html>

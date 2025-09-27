@@ -299,26 +299,41 @@ class CollectionPage {
         const configMap = {
             featured: {
                 title: 'Featured HTML5 Games',
-                description: 'Discover our hand-picked selection of the best mini games to play right now. Explore top picks from <a href="/collections/category/action">Action</a>, <a href="/collections/category/puzzle">Puzzle</a>, <a href="/collections/category/racing">Racing</a>, and more — all free and playable instantly.',
+                description: 'Discover our hand‑picked showcase of standout mini games you can play right now — no downloads, no sign‑ups. Explore polished experiences from <a href="/collections/category/action">Action</a>, <a href="/collections/category/puzzle">Puzzle</a>, and <a href="/collections/category/racing">Racing</a>, with smooth performance on desktop and mobile. Each pick highlights quick‑to‑learn gameplay, satisfying depth, and replay value so you can jump in fast and keep coming back for more.',
                 subtitle: 'Featured Picks'
             },
             popular: {
                 title: 'Most Popular Games',
-                description: 'Trending games that players love the most. Jump into the hits getting thousands of plays across <a href="/collections/category/sports">Sports</a>, <a href="/collections/category/arcade">Arcade</a>, and <a href="/collections/category/shooting">Shooting</a> games.',
+                description: 'See what the community plays the most. These trending hits rack up plays every day across <a href="/collections/category/sports">Sports</a>, <a href="/collections/category/arcade">Arcade</a>, and <a href="/collections/category/shooting">Shooting</a>. Expect responsive controls, fast loading, and bite‑sized fun that keeps you coming back. Discover your next favorite and join thousands of players enjoying these top‑rated browser games.',
                 subtitle: 'Trending Now'
             },
             new: {
                 title: 'Newly Added Games',
-                description: 'Fresh HTML5 games added to MiniGamesHub. Be the first to try the latest adventures in <a href="/collections/category/adventure">Adventure</a> and <a href="/collections/category/simulation">Simulation</a>, plus brand-new releases across all categories.',
+                description: 'Fresh HTML5 games recently added to MiniGamesHub. Be first to try new releases spanning <a href="/collections/category/adventure">Adventure</a> and <a href="/collections/category/simulation">Simulation</a> — plus surprises across every category. We focus on quick starts, lightweight downloads, and smooth performance, so you can explore the latest gems in your browser without friction.',
                 subtitle: 'New Arrivals'
             }
         };
 
         const config = configMap[this.collectionType] || configMap.featured;
 
-        this.updateTextContent(config.title, config.description, config.subtitle);
-        this.updateMetaTags(config.title, config.description);
+        // Optionally enrich description with dynamic links to top games in this list
+        const topLinks = this.buildTopGameLinks(this.allGames, 2);
+        const desc = topLinks ? `${config.description} Try top picks like ${topLinks}.` : config.description;
+
+        this.updateTextContent(config.title, desc, config.subtitle);
+        this.updateMetaTags(config.title, desc);
         this.updateBreadcrumb(config.title);
+    }
+
+    buildTopGameLinks(list, limit = 2) {
+        if (!Array.isArray(list) || list.length === 0) return '';
+        const sorted = [...list].sort((a, b) => (b.plays || 0) - (a.plays || 0));
+        const picks = sorted.slice(0, Math.max(0, limit));
+        const links = picks.map(g => `<a href="/games/${g.slug}">${this.escapeHtml ? this.escapeHtml(g.name) : (g.name || 'Game')}</a>`);
+        if (links.length === 0) return '';
+        if (links.length === 1) return links[0];
+        if (links.length === 2) return `${links[0]} and ${links[1]}`;
+        return links.slice(0, -1).join(', ') + ', and ' + links.slice(-1)[0];
     }
 
     setCategoryContent(category) {

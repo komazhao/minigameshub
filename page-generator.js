@@ -464,7 +464,16 @@ class PageGenerator {
      * 生成分类描述
      */
     generateCategoryDescription(category) {
-        return `${category.description} Explore our collection of ${category.game_count} awesome ${category.name.toLowerCase()} games — all free to play online! From casual to challenging, find the perfect ${category.name.toLowerCase()} game for your skill level.`;
+        const name = category.name;
+        const lower = name.toLowerCase();
+        const count = category.game_count || 0;
+        // Compose ~90–110 words intro
+        const sentences = [
+            `${name} games deliver engaging, pick‑up‑and‑play fun across browsers with no downloads required. Whether you prefer quick sessions or longer challenges, this hand‑curated collection is designed to be smooth, mobile‑friendly, and easy to jump into.`,
+            `Explore ${count} free ${lower} titles featuring ${this.getCategoryFeatures(name)} and accessible controls for players of all skill levels.`,
+            `Start with community favorites, discover hidden gems, and bookmark the ones you love — MiniGamesHub makes it simple to find quality ${lower} experiences that run great on desktop and phones.`
+        ];
+        return sentences.join(' ');
     }
     
     /**
@@ -515,24 +524,11 @@ class PageGenerator {
      */
     generateCategoryFaqJsonLd(category) {
         const qas = [
-            {
-                q: `What are ${category.name} games?`,
-                a: this.generateCategoryFAQ(category)
-            },
-            {
-                q: `Are these ${category.name} games free to play?`,
-                a: `Yes! All ${category.name.toLowerCase()} games on MiniGamesHub are completely free to play. You don't need to download anything or sign up — just click and play instantly in your web browser.`
-            },
-            {
-                q: `Can I play ${category.name} games on mobile?`,
-                a: `Many of our ${category.name.toLowerCase()} games are mobile-friendly and work great on smartphones and tablets. Look for the mobile-friendly badge on each game.`
-            },
-            {
-                q: `How often do you add new ${category.name} games?`,
-                a: `We regularly add new ${category.name.toLowerCase()} games to keep our collection fresh and exciting. Check back often to discover the latest additions!`
-            }
+            { q: `What are ${category.name} games?`, a: this.generateCategoryFAQ(category) },
+            { q: `Are these ${category.name} games free to play?`, a: `Yes! All ${category.name.toLowerCase()} games on MiniGamesHub are completely free to play. You don't need to download anything or sign up — just click and play instantly in your web browser.` },
+            { q: `Can I play ${category.name} games on mobile?`, a: `Many of our ${category.name.toLowerCase()} games are mobile-friendly and work great on smartphones and tablets. Look for the mobile-friendly badge on each game.` }
         ];
-
+        
         const json = {
             '@context': 'https://schema.org',
             '@type': 'FAQPage',
