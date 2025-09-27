@@ -14,6 +14,8 @@
   
   # Content Security Policy (游戏网站优化)
   Content-Security-Policy: default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: blob: *.cloudflare.com *.supabase.co; style-src 'self' 'unsafe-inline' https: fonts.googleapis.com; font-src 'self' https: fonts.gstatic.com data:; img-src 'self' https: data: blob:; media-src 'self' https: blob:; frame-src 'self' https:; connect-src 'self' https: *.supabase.co *.cloudflare.com; worker-src 'self' blob:
+  # Permissions Policy (delegate to iframes and enable features for games)
+  Permissions-Policy: accelerometer=(self "*"), gyroscope=(self "*"), fullscreen=(self "*"), gamepad=(self "*"), microphone=(self "*"), camera=(self "*"), autoplay=(self "*"), picture-in-picture=(self "*"), xr-spatial-tracking=(self "*"), clipboard-read=(self), clipboard-write=(self)
   
   # 性能优化
   Cross-Origin-Embedder-Policy: unsafe-none
