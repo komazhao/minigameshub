@@ -90,6 +90,7 @@ function main() {
     buildUrl('/collections/new', '0.9', 'daily'),
     buildUrl('/collections/popular', '0.9', 'daily'),
     buildUrl('/random', '0.6', 'daily'),
+    buildUrl('/about', '0.3', 'yearly'),
     buildUrl('/privacy-policy', '0.6', 'monthly'),
     buildUrl('/terms-of-service', '0.6', 'monthly'),
     buildUrl('/contact', '0.5', 'monthly'),

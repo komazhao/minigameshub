@@ -187,7 +187,7 @@ async function main() {
     try {
       run('git add sw.js index.html collection.html offline.html robots.txt sitemap*.xml');
       run('git add assets/js/swRegister.js assets/js/navRouter.js');
-      run('git add privacy-policy/index.html terms-of-service/index.html contact/index.html');
+      run('git add privacy-policy/index.html terms-of-service/index.html contact/index.html contact/thanks/index.html about/index.html');
       run('git add templates/game-page.html templates/category-page.html');
       run('git add generated-pages');
       run('git add tools/release.mjs tools/publish.mjs page-generator.js');
