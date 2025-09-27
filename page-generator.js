@@ -162,7 +162,7 @@ class PageGenerator {
             '{{GAME_SLUG}}': game.slug,
             '{{GAME_DESCRIPTION}}': this.escapeHtml(game.description),
             '{{GAME_DESCRIPTION_EXCERPT}}': this.escapeHtml(this.truncateText(game.description, 150)),
-            '{{GAME_DESCRIPTION_HTML}}': this.formatDescription(game.description),
+            '{{GAME_DESCRIPTION_HTML}}': this.formatDescriptionRich(game.description),
             '{{GAME_INSTRUCTIONS}}': this.escapeHtml(game.instructions),
             '{{GAME_KEYWORDS}}': this.escapeHtml(game.keywords),
             '{{GAME_IMAGE}}': game.image,
@@ -547,12 +547,91 @@ class PageGenerator {
     /**
      * 格式化描述为HTML
      */
-    formatDescription(description) {
-        return description
-            .split('\n')
-            .filter(line => line.trim())
-            .map(line => `<p>${this.escapeHtml(line.trim())}</p>`)
-            .join('');
+    formatDescriptionRich(description) {
+        const fix = (s) => this.fixContractions(String(s || ''));
+        const html = this.sanitizeHtml(description || '');
+        if (!/<\s*p[\s>]/i.test(html)) {
+            const parts = fix(html.replace(/\r/g,'')).split(/\n{2,}/).map(s=>s.trim()).filter(Boolean);
+            if (parts.length) return parts.map(p => `<p>${this.escapeHtml(p)}</p>`).join('');
+        }
+        return html;
+    }
+
+    fixContractions(s) {
+        const pairs = [
+            [/\b[Yy]ou re\b/g, (m) => m[0] + "'re".slice(1)],
+            [/\b[Yy]ou ll\b/g, (m) => m[0] + "'ll".slice(1)],
+            [/\b[Dd]on t\b/g, (m) => m[0] + "'t".slice(1)],
+            [/\b[Ii]sn t\b/g, (m) => m[0] + "'t".slice(1)],
+            [/\b[Cc]an t\b/g, (m) => m[0] + "'t".slice(1)],
+            [/\b[Ww]on t\b/g, (m) => m[0] + "'t".slice(1)],
+            [/\b[Dd]oesn t\b/g, (m) => m[0] + "'t".slice(1)],
+            [/\b[Dd]idn t\b/g, (m) => m[0] + "'t".slice(1)],
+            [/\b[Ii] m\b/g, (m) => m[0] + "'m".slice(1)],
+            [/\b[Ii] ve\b/g, (m) => m[0] + "'ve".slice(1)],
+            [/\b[Ww]e re\b/g, (m) => m[0] + "'re".slice(1)],
+            [/\b[Ww]e ll\b/g, (m) => m[0] + "'ll".slice(1)],
+            [/\b[Tt]hey re\b/g, (m) => m[0] + "'re".slice(1)],
+            [/\b[Ii]t s\b/g, (m) => m[0] + "'s".slice(1)]
+        ];
+        let out = s;
+        pairs.forEach(([re, rep]) => { out = out.replace(re, rep); });
+        return out;
+    }
+
+    sanitizeHtml(input) {
+        // Allow minimal tags; strip external anchors or convert to text
+        const allowed = new Set(['P','BR','STRONG','B','EM','UL','OL','LI','H3','H4','A']);
+        const wrap = (s) => `<p>${this.escapeHtml(this.fixContractions(s))}</p>`;
+        if (!input) return wrap('');
+        try {
+            const { JSDOM } = require('jsdom');
+            const dom = new JSDOM('<!DOCTYPE html><div id="x"></div>');
+            const doc = dom.window.document;
+            const container = doc.getElementById('x');
+            container.innerHTML = String(input);
+            const walk = (node) => {
+                const children = Array.from(node.childNodes);
+                for (const child of children) {
+                    if (child.nodeType === 1) {
+                        const tag = child.tagName;
+                        if (!allowed.has(tag)) {
+                            const text = doc.createTextNode(child.textContent || '');
+                            node.replaceChild(text, child);
+                            continue;
+                        }
+                        if (tag === 'A') {
+                            const href = child.getAttribute('href') || '';
+                            try {
+                                const u = new URL(href, 'https://minigameshub.co');
+                                if (u.origin !== 'https://minigameshub.co') {
+                                    // convert to text
+                                    const text = doc.createTextNode(child.textContent || '');
+                                    node.replaceChild(text, child);
+                                    continue;
+                                } else {
+                                    child.setAttribute('rel','nofollow noopener');
+                                }
+                            } catch {
+                                const text = doc.createTextNode(child.textContent || '');
+                                node.replaceChild(text, child);
+                                continue;
+                            }
+                        }
+                        walk(child);
+                    } else if (child.nodeType === 3) {
+                        child.textContent = this.fixContractions(child.textContent);
+                    }
+                }
+            };
+            walk(container);
+            return container.innerHTML;
+        } catch (e) {
+            // jsdom may not be available in runtime for generator, fallback: strip tags
+            const stripped = String(input).replace(/<[^>]+>/g, ' ');
+            const parts = stripped.split(/\n{2,}/).map(s=>s.trim()).filter(Boolean);
+            return parts.length ? parts.map(wrap).join('') : wrap(stripped);
+        }
     }
     
     /**

@@ -1043,9 +1043,10 @@ class MiniGamesHubApp {
             modalGameTitle.textContent = game.name || game.game_name || 'Untitled Game';
         }
 
-        // 设置游戏描述
+        // 设置游戏描述（清洗并安全渲染）
         if (modalDescription) {
-            modalDescription.textContent = game.description || game.game_description || 'A fun online game — give it a try!';
+            const rawDesc = game.description || game.game_description || 'A fun online game — give it a try!';
+            modalDescription.innerHTML = this.sanitizeGameHtml(rawDesc);
         }
 
         // 设置游戏操作说明
@@ -1108,6 +1109,87 @@ class MiniGamesHubApp {
         // 更新游戏播放统计
         if (window.gameManager) {
             window.gameManager.recordGamePlay(gameId);
+        }
+    }
+
+    // 轻量 HTML 清洗：允许有限标签；外链转换为纯文本；修正常见缩写撇号
+    sanitizeGameHtml(input) {
+        const txtFix = (s) => {
+            const fixes = [
+                [/\b[Yy]ou re\b/g, (m) => m[0] + "'re".slice(1)],
+                [/\b[Yy]ou ll\b/g, (m) => m[0] + "'ll".slice(1)],
+                [/\b[Dd]on t\b/g, (m) => m[0] + "'t".slice(1)],
+                [/\b[Ii]sn t\b/g, (m) => m[0] + "'t".slice(1)],
+                [/\b[Cc]an t\b/g, (m) => m[0] + "'t".slice(1)],
+                [/\b[Ww]on t\b/g, (m) => m[0] + "'t".slice(1)],
+                [/\b[Dd]oesn t\b/g, (m) => m[0] + "'t".slice(1)],
+                [/\b[Dd]idn t\b/g, (m) => m[0] + "'t".slice(1)],
+                [/\b[Ii] m\b/g, (m) => m[0] + "'m".slice(1)],
+                [/\b[Ii] ve\b/g, (m) => m[0] + "'ve".slice(1)],
+                [/\b[Ww]e re\b/g, (m) => m[0] + "'re".slice(1)],
+                [/\b[Ww]e ll\b/g, (m) => m[0] + "'ll".slice(1)],
+                [/\b[Tt]hey re\b/g, (m) => m[0] + "'re".slice(1)],
+                [/\b[Ii]t s\b/g, (m) => m[0] + "'s".slice(1)]
+            ];
+            let o = s;
+            fixes.forEach(([re, rep]) => { o = o.replace(re, rep); });
+            return o;
+        };
+        try {
+            const allowed = new Set(['P','BR','STRONG','B','EM','UL','OL','LI','H3','H4','A']);
+            const container = document.createElement('div');
+            container.innerHTML = input || '';
+            const walk = (node) => {
+                const children = Array.from(node.childNodes);
+                for (const child of children) {
+                    if (child.nodeType === 1) { // element
+                        const tag = child.tagName;
+                        if (!allowed.has(tag)) {
+                            // Replace disallowed element by its text content
+                            const span = document.createTextNode(child.textContent || '');
+                            node.replaceChild(span, child);
+                            continue;
+                        }
+                        if (tag === 'A') {
+                            const href = child.getAttribute('href') || '';
+                            try {
+                                const u = new URL(href, window.location.origin);
+                                if (u.origin !== window.location.origin) {
+                                    // Convert external link to plain text to avoid spammy outlinks
+                                    const text = document.createTextNode(child.textContent || u.href);
+                                    node.replaceChild(text, child);
+                                    continue;
+                                } else {
+                                    child.setAttribute('rel','nofollow noopener');
+                                }
+                            } catch { // invalid URL
+                                const text = document.createTextNode(child.textContent || '');
+                                node.replaceChild(text, child);
+                                continue;
+                            }
+                        }
+                        walk(child);
+                    } else if (child.nodeType === 3) { // text
+                        child.textContent = txtFix(child.textContent);
+                    }
+                }
+            };
+            walk(container);
+
+            // If no paragraph tags present, create basic paragraphs from line breaks
+            if (!container.querySelector('p')) {
+                const text = container.textContent || '';
+                const parts = text.split(/\n{2,}|\r{2,}/).map(s => s.trim()).filter(Boolean);
+                if (parts.length) {
+                    const out = document.createElement('div');
+                    parts.forEach(p => { const el = document.createElement('p'); el.textContent = txtFix(p); out.appendChild(el); });
+                    return out.innerHTML;
+                }
+            }
+            return container.innerHTML;
+        } catch {
+            const esc = (s) => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+            return `<p>${esc(txtFix(String(input||'')))}</p>`;
         }
     }
     
