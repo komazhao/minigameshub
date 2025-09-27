@@ -731,18 +731,24 @@ body {
     padding: var(--spacing-md);
 }
 
+/* Base game title */
 .game-title {
     font-size: var(--font-size-lg);
     font-weight: 600;
     margin-bottom: var(--spacing-xs);
     color: var(--label-primary);
+}
+
+/* Clamp only on cards; page headers can wrap naturally */
+.game-card .game-title {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-.game-description {
+/* Clamp description only on small cards */
+.game-card .game-description {
     color: var(--label-secondary);
     font-size: var(--font-size-sm);
     line-height: 1.5;
@@ -751,6 +757,16 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
     margin-bottom: var(--spacing-md);
+}
+
+/* Detailed pages and modal: show full description */
+.game-info-section .game-description,
+#game-modal .game-description {
+    color: var(--label-secondary);
+    font-size: var(--font-size-md);
+    line-height: 1.7;
+    display: block;
+    overflow: visible;
 }
 
 .game-meta {
