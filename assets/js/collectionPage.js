@@ -241,6 +241,18 @@ class CollectionPage {
         this.elements.collectionGrid.insertAdjacentHTML('beforeend', cards);
         this.visibleGames += nextGames.length;
 
+        // LCP: if this is the very first batch, promote first image priority
+        if (reset || this.visibleGames === nextGames.length) {
+            try {
+                const firstImg = this.elements.collectionGrid.querySelector('img');
+                if (firstImg) {
+                    firstImg.setAttribute('loading', 'eager');
+                    firstImg.setAttribute('fetchpriority', 'high');
+                    firstImg.setAttribute('decoding', 'async');
+                }
+            } catch (_) {}
+        }
+
         if (this.elements.collectionCount) {
             this.elements.collectionCount.textContent = `${this.sortedGames.length} games`;
         }
@@ -271,7 +283,7 @@ class CollectionPage {
         return `
             <div class="game-card" data-game-id="${game.game_id}">
                 <div class="game-image">
-                    <img src="${image}" alt="${game.name}" width="512" height="384">
+                    <img src="${image}" alt="${game.name}" width="512" height="384" loading="lazy" decoding="async">
                     ${isFeatured ? '<span class="game-badge">Featured</span>' : ''}
                     <button class="game-favorite favorite-btn ${isFavorite ? 'active' : ''}" data-game-id="${game.game_id}" aria-label="Add to favorites">
                         ♥

@@ -402,6 +402,16 @@ class MiniGamesHubApp {
         this.elements.featuredGames.innerHTML = featuredGames.map(game =>
             this.createGameCard(game)
         ).join('');
+
+        // Promote the first featured image as LCP candidate (mobile)
+        try {
+            const firstImg = this.elements.featuredGames.querySelector('img');
+            if (firstImg) {
+                firstImg.setAttribute('loading', 'eager');
+                firstImg.setAttribute('fetchpriority', 'high');
+                firstImg.setAttribute('decoding', 'async');
+            }
+        } catch (_) {}
     }
     
     /**
@@ -423,7 +433,7 @@ class MiniGamesHubApp {
                 <div class="game-image">
                     <img src="${game.image || '/assets/images/game-placeholder.png'}" 
                          alt="${game.name}" 
-                         loading="lazy" width="512" height="384">
+                         loading="lazy" decoding="async" width="512" height="384">
                     <div class="game-overlay">
                         <button class="play-btn">▶ Play</button>
                     </div>
@@ -640,6 +650,15 @@ class MiniGamesHubApp {
 
             if (this.loadedGames === 0) {
                 this.elements.gamesGrid.innerHTML = gameCards;
+                // Promote the first grid image as LCP fallback when featured section is absent
+                try {
+                    const firstImg = this.elements.gamesGrid.querySelector('img');
+                    if (firstImg) {
+                        firstImg.setAttribute('loading', 'eager');
+                        firstImg.setAttribute('fetchpriority', 'high');
+                        firstImg.setAttribute('decoding', 'async');
+                    }
+                } catch (_) {}
             } else {
                 this.elements.gamesGrid.insertAdjacentHTML('beforeend', gameCards);
             }

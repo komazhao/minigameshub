@@ -1060,6 +1060,10 @@ body {
     color: var(--label-primary);
 }
 
+/* ===== ADSENSE SAFE RESERVE (reduce CLS when auto ads appear) ===== */
+ins.adsbygoogle { display:block; min-height: 280px; width: 100%; }
+@media (max-width: 480px){ ins.adsbygoogle { min-height: 180px; } }
+
 /* ===== FOOTER ===== */
 .footer {
     background: var(--system-background-secondary);
